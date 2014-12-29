@@ -1,0 +1,28 @@
+<f:layout name="default" />
+
+<f:section name="iconButtons">
+	<f:be.buttons.icon uri="{f:uri.action(action: 'index')}" icon="closedok" title="Cancel" />
+</f:section>
+
+<f:section name="content">
+	<script type="text/javascript">
+		var popup;
+
+		function openCallbackWindow(link) {
+			popup = window.open(
+				'{authorizationUrl}',
+				'Authorize',
+				'width=800, height=380'
+			);
+			popup.focus();
+		}
+
+		function childGetClosed() {
+			window.location = "{f:uri.action(action: 'index')}";
+		}
+
+		openCallbackWindow();
+	</script>
+
+	<div>Es sollte ein Popup für die Authentifizierung geöffnet worden sein.</div>
+</f:section>

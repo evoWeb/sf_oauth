@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/extension_sf_oauth/!svn/ver/2/trunk/Resources/Private/Backend/Templates/Account
+END
+Edit.html
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/extension_sf_oauth/!svn/ver/5/trunk/Resources/Private/Backend/Templates/Account/Edit.html
+END
+Index.html
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/extension_sf_oauth/!svn/ver/5/trunk/Resources/Private/Backend/Templates/Account/Index.html
+END
+Accepted.html
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/extension_sf_oauth/!svn/ver/2/trunk/Resources/Private/Backend/Templates/Account/Accepted.html
+END
+New.html
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/extension_sf_oauth/!svn/ver/5/trunk/Resources/Private/Backend/Templates/Account/New.html
+END
+Authorize.html
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/extension_sf_oauth/!svn/ver/2/trunk/Resources/Private/Backend/Templates/Account/Authorize.html
+END

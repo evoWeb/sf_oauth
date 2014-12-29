@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/extension_sf_oauth/!svn/ver/1/trunk
+END
+ext_tables.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/extension_sf_oauth/!svn/ver/4/trunk/ext_tables.php
+END
+ext_localconf.php
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/extension_sf_oauth/!svn/ver/3/trunk/ext_localconf.php
+END
+ext_icon.gif
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/extension_sf_oauth/!svn/ver/2/trunk/ext_icon.gif
+END
+ext_emconf.php
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/extension_sf_oauth/!svn/ver/8/trunk/ext_emconf.php
+END
+ext_typoscript_setup.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/extension_sf_oauth/!svn/ver/2/trunk/ext_typoscript_setup.txt
+END

@@ -1,0 +1,52 @@
+{namespace sfoa = Tx_SfOauth_ViewHelpers}
+
+<f:layout name="default" />
+
+<f:section name="iconButtons"/>
+
+<f:section name="content">
+
+<table cellspacing="0" cellpadding="0" border="0" class="typo3-dblist">
+
+	<!-- Element, begin: -->
+	<tbody>
+		<tr class="c-table-row-spacer">
+			<td nowrap="nowrap" class="col-icon"><img width="1" height="8" alt="" src="clear.gif"></td>
+			<td nowrap="nowrap" class=""><img width="100" height="1" alt="" src="clear.gif"></td>
+			<td nowrap="nowrap" colspan="2" class=""></td>
+			<td nowrap="nowrap" colspan="3" class=""></td>
+		</tr>
+		<!-- Element, begin: -->
+		<tr class="t3-row-header">
+			<td nowrap="nowrap" class="col-icon">&nbsp;</td>
+			<td nowrap="nowrap" colspan="6" class=""></td>
+		</tr>
+		<!-- Element, begin: -->
+		<tr class="c-headLine">
+			<td nowrap="nowrap" class="col-icon"><f:be.buttons.icon uri="{f:uri.action(action: 'new')}" icon="new_el" title="{f:translate(key: 'new_consumer')}" /></td>
+			<td nowrap="nowrap" class="col-title"><a><f:translate key="consumer_title"/>:</a></td>
+			<td nowrap="nowrap" class="col-clipboard">&nbsp;</td>
+			<td nowrap="nowrap" class="col-control-space">&nbsp;</td>
+			<td nowrap="nowrap" class=""></td>
+			<td nowrap="nowrap" class=""></td>
+			<td nowrap="nowrap" class=""></td>
+		</tr>
+<f:for each="{consumers}" as="consumer">
+		<!-- Element, begin: -->
+		<tr class="db_list_normal firstcol lastcol">
+			<td nowrap="nowrap" class="col-icon"></td>
+			<td nowrap="nowrap" class="col-title">{consumer.title}</td>
+			<td nowrap="nowrap" class="col-clipboard">
+				<f:be.buttons.icon uri="{f:uri.action(action: 'edit', arguments:{consumer: consumer.uid})}" icon="edit2" title="Edit '{consumer.title}'" />
+				<f:link.action action="delete" arguments="{consumer: consumer.uid}"><img src="sysext/t3skin/icons/gfx/garbage.gif" alt="" title="Delete '{consumer.title}'"/></f:link.action>
+			</td>
+			<td nowrap="nowrap" class="col-control-space">&nbsp;</td>
+			<td nowrap="nowrap" class=""></td>
+			<td nowrap="nowrap" class=""></td>
+			<td nowrap="nowrap" class=""></td>
+		</tr>
+</f:for>
+	</tbody>
+</table>
+
+</f:section>

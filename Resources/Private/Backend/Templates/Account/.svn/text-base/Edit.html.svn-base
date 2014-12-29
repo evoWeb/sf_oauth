@@ -1,0 +1,35 @@
+{namespace sfoa = Tx_SfOauth_ViewHelpers}
+
+<f:layout name="default" />
+
+<f:section name="iconButtons">
+	<sfoa:be.buttons.icon uri="{f:uri.action(action: 'index')}" icon="closedok" title="{f:translate(key: 'cancel')}" />
+	<sfoa:be.buttons.icon uri="javascript: document.editAccount.submit();" icon="saveandclosedok" title="{f:translate(key: 'save')}" />
+</f:section>
+
+<f:section name="content">
+
+<f:render partial="formErrors" arguments="{for: 'account'}" />
+
+<f:form method="post" controller="Account" action="update" name="editAccount" object="{account}">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="typo3-TCEforms">
+		<tr><td>
+			<table border="0" cellspacing="0" cellpadding="0" width="100%" class="wrapperTable1">
+
+		<tr class="class-main12">
+			<td><f:be.buttons.csh field="account_title"/></td>
+			<td width="99%"><span class="class-main14"><strong><f:translate key="account_title"/></strong></span></td>
+		</tr>
+		<tr class="class-main11">
+			<td nowrap="nowrap"></td>
+			<td valign="top">
+				<f:form.textfield property="title" size="60" />
+			</td>
+		</tr>
+
+			</table>
+		</td></tr>
+	</table>
+</f:form>
+
+</f:section>

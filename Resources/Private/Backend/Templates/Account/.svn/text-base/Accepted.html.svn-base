@@ -1,0 +1,4 @@
+<script type="application/javascript">
+	window.opener.childGetClosed();
+	window.close();
+</script>
