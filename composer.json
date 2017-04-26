@@ -1,0 +1,29 @@
+{
+	"name": "evoweb/sf-oauth",
+	"type": "typo3-cms-extension",
+	"description": "Oauth for frontend",
+	"homepage": "https://github.com/evoWeb/sf_oauth/",
+	"license": ["GPL-2.0+"],
+
+	"support" : {
+		"issues" : "https://github.com/evoWeb/sf_oauth/issues"
+	},
+	"keywords": [
+		"oauth"
+	],
+
+	"require": {
+		"typo3/cms-core": "*"
+	},
+	"autoload": {
+		"psr-4": {
+			"Tx_SfOauth_Controller_": "Classes/"
+		}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/evoWeb/sf_oauth.git"
+		}
+	]
+}
