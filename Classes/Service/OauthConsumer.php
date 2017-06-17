@@ -1,4 +1,6 @@
 <?php
+namespace Evoweb\SfOauth\Service;
+
 /***************************************************************
  * Copyright notice
  *
@@ -25,223 +27,241 @@
 
 /**
  * Consumer of the oauth connection
- *
- * @author		Sebastian Fischer <typo3@evoweb.de>
- * @package		sf_oauth
- * @subpackage	OauthConsumer
  */
-class Tx_SfOauth_Service_OauthConsumer extends t3lib_svbase {
-	/**
-	 * Same as class name
-	 *
-	 * @var	string
-	 */
-	public $prefixId = 'tx_sf_oauth_consumer';
+class OauthConsumer extends \TYPO3\CMS\Core\Service\AbstractService
+{
+    /**
+     * Same as class name
+     *
+     * @var string
+     */
+    public $prefixId = 'tx_sf_oauth_consumer';
 
-	/**
-	 * Path to this script relative to the extension dir.
-	 *
-	 * @var	string
-	 */
-	public $scriptRelPath = 'Classes/Service/OauthConsumer.php';
+    /**
+     * Path to this script relative to the extension dir.
+     *
+     * @var string
+     */
+    public $scriptRelPath = 'Classes/Service/OauthConsumer.php';
 
-	/**
-	 * The extension key.
-	 *
-	 * @var	string
-	 */
-	public $extKey = 'sf_oauth';
+    /**
+     * The extension key.
+     *
+     * @var string
+     */
+    public $extKey = 'sf_oauth';
 
-	/**
-	 * @var	Tx_SfOauth_Service_OauthConnection
-	 */
-	protected $connection;
+    /**
+     * @var OauthConnection
+     */
+    protected $connection;
 
-	/**
-	 * @var	Tx_SfOauth_Domain_Repository_AccountRepository
-	 */
-	protected $accountRepository;
+    /**
+     * @var \Evoweb\SfOauth\Domain\Repository\AccountRepository
+     */
+    protected $accountRepository;
 
-	/**
-	 * @var	object
-	 */
-	protected $account;
+    /**
+     * @var \Evoweb\SfOauth\Domain\Model\Account
+     */
+    protected $account;
 
-	/**
-	 * @var	string
-	 */
-	protected $token = NULL;
+    /**
+     * @var string
+     */
+    protected $token = null;
 
-	/**
-	 * @var	string
-	 */
-	protected $tokenSecret = NULL;
+    /**
+     * @var string
+     */
+    protected $tokenSecret = null;
 
-	/**
-	 * Initialize the service
-	 *
-	 * @return	boolean
-	 */
-	public function init() {
-		$available = parent::init();
+    /**
+     * Initialize the service
+     *
+     * @return boolean
+     */
+    public function init()
+    {
+        $available = parent::init();
 
-		$this->connection = t3lib_div::makeInstance('Tx_SfOauth_Service_OauthConnection');
+        $this->connection = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(OauthConnection::class);
 
-		return $available;
-	}
+        return $available;
+    }
 
-	/**
-	 * performs the service processing
-	 *
-	 * @param	string	$content	Content which should be processed.
-	 * @param	string	$type	Content type
-	 * @param	array	$conf	Configuration array
-	 * @return	boolean
-	 */
-	public function process($content = '', $type = '', $conf = array()) {
-		// Depending on the service type there's not a process() function.
-		// You have to implement the API of that service type.
-		return TRUE;
-	}
+    /**
+     * performs the service processing
+     *
+     * @param string $content Content which should be processed.
+     * @param string $type Content type
+     * @param array $conf Configuration array
+     *
+     * @return boolean
+     */
+    public function process($content = '', $type = '', $conf = array())
+    {
+        // Depending on the service type there's not a process() function.
+        // You have to implement the API of that service type.
+        return true;
+    }
 
-	/**
-	 * Setter for uid
-	 *
-	 * @param	integer	$uid	id of the account to use
-	 * @return	void
-	 */
-	public function setAccount($uid) {
-		$this->accountRepository = t3lib_div::makeInstance('Tx_SfOauth_Domain_Repository_AccountRepository');
-		$this->account = $this->accountRepository->findByUid($uid);
-		$this->connection->setAccount($this->account);
-	}
+    /**
+     * Setter for uid
+     *
+     * @param integer $uid id of the account to use
+     *
+     * @return void
+     */
+    public function setAccount($uid)
+    {
+        $this->accountRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \Evoweb\SfOauth\Domain\Repository\AccountRepository::class
+        );
+        $this->account = $this->accountRepository->findByUid($uid);
+        $this->connection->setAccount($this->account);
+    }
 
-	/**
-	 * Setter for token and token_secret
-	 *
-	 * @param	string	$token	token needed to auth
-	 * @param	string	$tokenSecret	token secret needed to auth
-	 * @return	void
-	 */
-	public function setToken($token = NULL, $tokenSecret = NULL) {
-		if (!is_null($token)) {
-			$this->token = $token;
-		}
+    /**
+     * Setter for token and token_secret
+     *
+     * @param string $token token needed to auth
+     * @param string $tokenSecret token secret needed to auth
+     *
+     * @return void
+     */
+    public function setToken($token = null, $tokenSecret = null)
+    {
+        if (!is_null($token)) {
+            $this->token = $token;
+        }
 
-		if (!is_null($tokenSecret)) {
-			$this->tokenSecret = $tokenSecret;
-		}
-	}
+        if (!is_null($tokenSecret)) {
+            $this->tokenSecret = $tokenSecret;
+        }
+    }
 
-	/**
-	 * Returns a combination of authorizationurl and oauth_token
-	 *
-	 * @param	string	$token	token needed to get an authorization url
-	 * @return	string
-	 */
-	public function getAuthorizationUrl($token) {
-		return $this->account->getConsumer()->getAuthorizeUrl() .
-			'?oauth_token=' . $token;
-	}
+    /**
+     * Returns a combination of authorization url and oauth_token
+     *
+     * @param string $token token needed to get an authorization url
+     *
+     * @return string
+     */
+    public function getAuthorizationUrl($token)
+    {
+        return $this->account->getConsumer()->getAuthorizeUrl() . '?oauth_token=' . $token;
+    }
 
-	/**
-	 * Returns a combination of authorizationurl and oauth_token
-	 *
-	 * @param	string	$token	token needed to get an authentication url
-	 * @return	string
-	 */
-	public function getAuthenticationUrl($token) {
-		return $this->account->getConsumer()->getAuthenticateUrl() .
-			'?oauth_token=' . $token;
-	}
+    /**
+     * Returns a combination of authentication url and oauth_token
+     *
+     * @param string $token token needed to get an authentication url
+     *
+     * @return string
+     */
+    public function getAuthenticationUrl($token)
+    {
+        return $this->account->getConsumer()->getAuthenticateUrl() . '?oauth_token=' . $token;
+    }
 
-	/**
-	 * Get a request token of an oauth service provider
-	 *
-	 * @param	string	$callbackUrl	url to use as callback
-	 * @return	Tx_SfOauth_Service_OauthResponse
-	 */
-	public function getRequestToken($callbackUrl = '') {
-		$oauth = array();
+    /**
+     * Get a request token of an oauth service provider
+     *
+     * @param string $callbackUrl url to use as callback
+     *
+     * @return OauthResponse
+     */
+    public function getRequestToken($callbackUrl = '')
+    {
+        $oauth = [];
 
-		if ($callbackUrl != '') {
-			$oauth['oauth_callback'] = $callbackUrl;
-		}
+        if ($callbackUrl != '') {
+            $oauth['oauth_callback'] = $callbackUrl;
+        }
 
-		return $this->connection->httpRequest(
-			'GET',
-			$this->account->getConsumer()->getRequestUrl(),
-			array(
-				'oauth' => $oauth
-			)
-		);
-	}
+        return $this->connection->httpRequest(
+            'GET',
+            $this->account->getConsumer()->getRequestUrl(),
+            [
+                'oauth' => $oauth,
+            ]
+        );
+    }
 
-	/**
-	 * Request oauth service provider for authentication token with request
-	 * token given
-	 *
-	 * @param	string	$token	token to get an authentication token set
-	 * @return	Tx_SfOauth_Service_OauthResponse
-	 */
-	public function getAuthenticationToken($token) {
-		return $this->connection->httpRequest(
-			'GET',
-			$this->getAuthenticationUrl($token)
-		);
-	}
+    /**
+     * Request oauth service provider for authentication token with request
+     * token given
+     *
+     * @param string $token token to get an authentication token set
+     *
+     * @return OauthResponse
+     */
+    public function getAuthenticationToken($token)
+    {
+        return $this->connection->httpRequest('GET', $this->getAuthenticationUrl($token));
+    }
 
-	/**
-	 * Get the access token, that is needed in further usage
-	 *
-	 * @param	string	$verifier	verifier served from oauth to confirm
-	 * the callback
-	 * @return	Tx_SfOauth_Service_OauthResponse
-	 */
-	public function getAccessToken($verifier) {
-		$oauth = array();
+    /**
+     * Get the access token, that is needed in further usage
+     *
+     * @param string $verifier verifier served from oauth to confirm the callback
+     *
+     * @return OauthResponse
+     */
+    public function getAccessToken($verifier)
+    {
+        $oauth = [];
 
-		if (!is_null($this->token)) {
-			$oauth['oauth_token'] = $this->token;
-			$oauth['oauth_verifier'] = $verifier;
-		}
+        if (!is_null($this->token)) {
+            $oauth['oauth_token'] = $this->token;
+            $oauth['oauth_verifier'] = $verifier;
+        }
 
-		return $this->connection->httpRequest(
-			'GET',
-			$this->account->getConsumer()->getAccessUrl(),
-			array(
-				'oauth' => $oauth
-			)
-		);
-	}
+        return $this->connection->httpRequest(
+            'GET',
+            $this->account->getConsumer()->getAccessUrl(),
+            [
+                'oauth' => $oauth,
+            ]
+        );
+    }
 
-	/**
-	 * Magic method to handle all calls that are not returned by a available method
-	 *
-	 * @param	string	$name	name of the method to call
-	 * @param	array	$params	parameters to use by method call
-	 * @return	string
-	 */
-	public function __call($name, $params = NULL) {
-		$parts = explode('_', $name);
-		$method = strtoupper(array_shift($parts));
-		$parts = implode('_', $parts);
+    /**
+     * Magic method to handle all calls that are not returned by a available method
+     *
+     * @param string $name name of the method to call
+     * @param array $params parameters to use by method call
+     *
+     * @return string
+     */
+    public function __call($name, $params = null)
+    {
+        $parts = explode('_', $name);
+        $method = strtoupper(array_shift($parts));
+        $parts = implode('_', $parts);
 
-		$seperator = (substr($this->account->getConsumer()->getApiUrl(), -1) == '/' ? ''  : '/');
-		$query = preg_replace('/[A-Z]|[0-9]+/e', "'/'.strtolower('\\0')", $parts) . '.json';
+        $separator = (substr($this->account->getConsumer()->getApiUrl(), -1) == '/' ? '' : '/');
+        // $query = preg_replace('/[A-Z]|[0-9]+/e', "'/'.strtolower('\\0')", $parts) . '.json';
+        $query = preg_replace_callback(
+            '/[A-Z]|[0-9]+/',
+            function ($matches) {
+                return '\'/\'' . strtolower($matches[0]);
+            },
+            $parts
+        );
 
-		if (!empty($params)) {
-			$args = (array) array_shift($params);
-		}
+        $args = [];
+        if (!empty($params)) {
+            $args = (array)array_shift($params);
+        }
 
-		return $this->connection->httpRequest(
-			$method,
-			$this->account->getConsumer()->getApiUrl() . $seperator . $query,
-			array(
-				'request' => $args
-			)
-		);
-	}
+        return $this->connection->httpRequest(
+            $method,
+            $this->account->getConsumer()->getApiUrl() . $separator . $query . '.json',
+            [
+                'request' => $args,
+            ]
+        );
+    }
 }
-
-?>

@@ -1,4 +1,6 @@
 <?php
+namespace Evoweb\SfOauth\Domain\Model;
+
 /***************************************************************
  * Copyright notice
  *
@@ -25,172 +27,174 @@
 
 /**
  * Account
- *
- * @author		Sebastian Fischer <typo3@evoweb.de>
- * @package		sf_oauth
- * @subpackage	Account
  */
-class Tx_SfOauth_Domain_Model_Account extends Tx_Extbase_DomainObject_AbstractEntity {
-	/**
-	 * @var	string
-	 */
-	protected $title;
+class Account extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity
+{
+    /**
+     * @var    string
+     */
+    protected $title;
 
-	/**
-	 * @var	integer
-	 */
-	protected $consumer;
+    /**
+     * @var    integer
+     */
+    protected $consumer;
 
-	/**
-	 * @var	Tx_SfOauth_Domain_Repository_ConsumerRepository
-	 */
-	protected $consumerObject;
+    /**
+     * @var object
+     */
+    protected $consumerObject;
 
-	/**
-	 * @var	string
-	 */
-	protected $consumerToken;
+    /**
+     * @var    string
+     */
+    protected $consumerToken;
 
-	/**
-	 * @var	string
-	 */
-	protected $consumerSecret;
+    /**
+     * @var    string
+     */
+    protected $consumerSecret;
 
-	/**
-	 * @var	boolean
-	 */
-	protected $status;
+    /**
+     * @var    boolean
+     */
+    protected $status;
 
-	/**
-	 * The generic constructor. If you want to implement your own __constructor()
-	 * method in your Domain Object you have to call $this->initializeObject()
-	 * in the first line of your constructor.
-	 *
-	 * @param	integer	$uid	uid of the model
-	 * @return	void
-	 */
-	public function __construct($uid) {
-		$this->uid = (int) $uid;
-		$this->initializeObject();
-	}
+    /**
+     * Getter for title
+     *
+     * @return    string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 
-	/**
-	 * Getter for title
-	 *
-	 * @return	string
-	 */
-	public function getTitle() {
-		return $this->title;
-	}
+    /**
+     * Setter for title
+     *
+     * @param    string $title title to set
+     *
+     * @return    void
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
 
-	/**
-	 * Setter for title
-	 *
-	 * @param	string	$title	title to set
-	 * @return	void
-	 */
-	public function setTitle($title) {
-		$this->title = $title;
-	}
+    /**
+     * Getter for consumer
+     *
+     * @return object
+     */
+    public function getConsumer()
+    {
+        if ($this->consumerObject === null) {
+            /** @var \Evoweb\SfOauth\Domain\Repository\ConsumerRepository $consumerRepository */
+            $consumerRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+                \Evoweb\SfOauth\Domain\Repository\ConsumerRepository::class
+            );
+            $this->consumerObject = $consumerRepository->findByUid($this->consumer);
+        }
 
-	/**
-	 * Getter for consumer
-	 *
-	 * @return	integer
-	 */
-	public function getConsumer() {
-		if ($this->consumerObject === NULL) {
-			$this->consumerObject = t3lib_div::makeInstance('Tx_SfOauth_Domain_Repository_ConsumerRepository')
-				->findByUid($this->consumer);
-		}
+        return $this->consumerObject;
+    }
 
-		return $this->consumerObject;
-	}
+    /**
+     * Setter for consumer
+     *
+     * @param    integer $consumer consumer to set
+     *
+     * @return    void
+     */
+    public function setConsumer($consumer)
+    {
+        $this->consumer = $consumer;
+    }
 
-	/**
-	 * Setter for consumer
-	 *
-	 * @param	integer	$consumer	consumer to set
-	 * @return	void
-	 */
-	public function setConsumer($consumer) {
-		$this->consumer = $consumer;
-	}
+    /**
+     * Getter for consumerToken
+     *
+     * @return    string
+     */
+    public function getConsumerToken()
+    {
+        return $this->consumerToken;
+    }
 
-	/**
-	 * Getter for consumerToken
-	 *
-	 * @return	string
-	 */
-	public function getConsumerToken() {
-		return $this->consumerToken;
-	}
+    /**
+     * Setter for consumerToken
+     *
+     * @param    string $consumerToken consumer token to set
+     *
+     * @return    void
+     */
+    public function setConsumerToken($consumerToken)
+    {
+        $this->consumerToken = $consumerToken;
+    }
 
-	/**
-	 * Setter for consumerToken
-	 *
-	 * @param	string	$consumerToken	consumer token to set
-	 * @return	void
-	 */
-	public function setConsumerToken($consumerToken) {
-		$this->consumerToken = $consumerToken;
-	}
+    /**
+     * Getter for consumerSecret
+     *
+     * @return    string
+     */
+    public function getConsumerSecret()
+    {
+        return $this->consumerSecret;
+    }
 
-	/**
-	 * Getter for consumerSecret
-	 *
-	 * @return	string
-	 */
-	public function getConsumerSecret() {
-		return $this->consumerSecret;
-	}
+    /**
+     * Setter for consumerSecret
+     *
+     * @param    string $consumerSecret consumer secret to set
+     *
+     * @return    void
+     */
+    public function setConsumerSecret($consumerSecret)
+    {
+        $this->consumerSecret = $consumerSecret;
+    }
 
-	/**
-	 * Setter for consumerSecret
-	 *
-	 * @param	string	$consumerSecret	consumer secret to set
-	 * @return	void
-	 */
-	public function setConsumerSecret($consumerSecret) {
-		$this->consumerSecret = $consumerSecret;
-	}
+    /**
+     * Setter for status
+     *
+     * @param    integer $status status to set
+     *
+     * @return    void
+     */
+    public function setStatus($status)
+    {
+        $this->status = (int)$status;
+    }
 
-	/**
-	 * Setter for status
-	 *
-	 * @param	integer	$status	status to set
-	 * @return	void
-	 */
-	public function setStatus($status) {
-		$this->status = (int) $status;
-	}
+    /**
+     * Check whether token is set and secure is unset then an error happened
+     *
+     * @return boolean
+     */
+    public function getHasError()
+    {
+        return ($this->status > 0) ? true : false;
+    }
 
-	/**
-	 * Check wether token is set and secure is unset then an error happend
-	 *
-	 * @return boolean
-	 */
-	public function getHasError() {
-		return ($this->status > 0) ? TRUE : FALSE;
-	}
+    /**
+     * Checks if no error is present
+     *
+     * @return boolean
+     */
+    public function getIsOk()
+    {
+        return ($this->status == 0) ? true : false;
+    }
 
-	/**
-	 * Checks if no error is present
-	 *
-	 * @return boolean
-	 */
-	public function getIsOk() {
-		return ($this->status == 0) ? TRUE : FALSE;
-	}
-
-	/**
-	 * Checks wether authentication agains oauth service is needed
-	 *
-	 * @return	boolean
-	 */
-	public function getHasWarning() {
-		return ($this->status == -1) ? TRUE : FALSE;
-	}
+    /**
+     * Checks whether authentication against oauth service is needed
+     *
+     * @return boolean
+     */
+    public function getHasWarning()
+    {
+        return ($this->status == -1) ? true : false;
+    }
 }
-
-?>

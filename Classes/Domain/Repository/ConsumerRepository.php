@@ -1,4 +1,6 @@
 <?php
+namespace Evoweb\SfOauth\Domain\Repository;
+
 /***************************************************************
  * Copyright notice
  *
@@ -25,12 +27,7 @@
 
 /**
  * Repository to access consumers
- *
- * @author		Sebastian Fischer <typo3@evoweb.de>
- * @package		sf_oauth
- * @subpackage	ConsumerRepository
  */
-class Tx_SfOauth_Domain_Repository_ConsumerRepository extends Tx_SfOauth_Domain_Repository_AbstractRepository {
+class ConsumerRepository extends AbstractRepository
+{
 }
-
-?>

@@ -1,4 +1,6 @@
 <?php
+namespace Evoweb\SfOauth\Controller;
+
 /***************************************************************
  * Copyright notice
  *
@@ -23,140 +25,159 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+
 /**
  * Consumer controller
- *
- * @author		Sebastian Fischer <typo3@evoweb.de>
- * @package		sf_oauth
- * @subpackage	ConsumerController
  */
-class Tx_SfOauth_Controller_ConsumerController extends Tx_Extbase_MVC_Controller_ActionController {
-	/**
-	 * @var Tx_SfOauth_Domain_Repository_ConsumerRepository
-	 */
-	protected $consumerRepository;
+class ConsumerController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
+{
+    /**
+     * @var \Evoweb\SfOauth\Domain\Repository\ConsumerRepository
+     */
+    protected $consumerRepository;
 
-	/**
-	 * Initialize all actions
-	 *
-	 * @return	void
-	 */
-	protected function initializeAction() {
-		$this->consumerRepository = t3lib_div::makeInstance('Tx_SfOauth_Domain_Repository_ConsumerRepository');
-	}
+    /**
+     * Initialize all actions
+     *
+     * @return void
+     */
+    protected function initializeAction()
+    {
+        $this->consumerRepository = $this->objectManager->get(
+            \Evoweb\SfOauth\Domain\Repository\ConsumerRepository::class
+        );
+    }
 
-	/**
-	 * Indexes all consumer
-	 *
-	 * @return	void
-	 */
-	public function indexAction() {
-		$consumers = $this->consumerRepository->findAll();
-		$this->view->assign('consumers', $consumers);
-	}
+    /**
+     * Indexes all consumer
+     *
+     * @return void
+     */
+    public function indexAction()
+    {
+        $consumers = $this->consumerRepository->findAll();
+        $this->view->assign('consumers', $consumers);
+    }
 
-	/**
-	 * Action that displays one single consumer
-	 *
-	 * @return	void
-	 */
-	public function showAction() {
-			// $consumer = $this->consumerRepository->findByUid();
-		$this->view->assign('consumer', $consumer);
-	}
+    /**
+     * Action that displays one single consumer
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Consumer $consumer
+     *
+     * @return void
+     */
+    public function showAction(\Evoweb\SfOauth\Domain\Model\Consumer $consumer)
+    {
+        $this->view->assign('consumer', $consumer);
+    }
 
-	/**
-	 * Displays a form for creating a new consumer
-	 *
-	 * @param	Tx_SfOauth_Domain_Model_Consumer	$newConsumer	consumer
-	 * @return	void
-	 * @dontvalidate $newConsumer
-	 */
-	public function newAction(Tx_SfOauth_Domain_Model_Consumer $newConsumer = NULL) {
-		$this->view->assign('newConsumer', $newConsumer);
-	}
+    /**
+     * Displays a form for creating a new consumer
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Consumer $newConsumer consumer
+     *
+     * @return void
+     *
+     * @ignorevalidation $newConsumer
+     */
+    public function newAction(\Evoweb\SfOauth\Domain\Model\Consumer $newConsumer = null)
+    {
+        $this->view->assign('newConsumer', $newConsumer);
+    }
 
-	/**
-	 * Creates a new consumer
-	 *
-	 * @param	Tx_SfOauth_Domain_Model_Consumer	$newConsumer	consumer
-	 * @return	void
-	 */
-	public function createAction(Tx_SfOauth_Domain_Model_Consumer $newConsumer) {
-		$this->consumerRepository->add($newConsumer);
-		$this->flashMessages->add('Your new consumer was created.');
-		$this->redirect('index');
-	}
+    /**
+     * Creates a new consumer
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Consumer $newConsumer consumer
+     *
+     * @return void
+     */
+    public function createAction(\Evoweb\SfOauth\Domain\Model\Consumer $newConsumer)
+    {
+        $this->consumerRepository->add($newConsumer);
 
-	/**
-	 * Deletes an existing consumer
-	 *
-	 * @return	void
-	 */
-	public function deleteAction() {
-		if ($this->request->hasArgument('consumer')) {
-			$uid = (int) $this->request->getArgument('consumer');
-		}
+        $this->addFlashMessage(
+            'Your new consumer was created.',
+            '',
+            FlashMessage::INFO
+        );
 
-		$this->consumerRepository->remove($uid);
-		$this->flashMessages->add('Your consumer has been removed.');
-		$this->redirect('index');
-	}
+        $this->redirect('index');
+    }
 
-	/**
-	 * Edits an existing consumer
-	 *
-	 * @return	string	Form for editing the existing consumer
-	 * @dontvalidate $consumer
-	 */
-	public function editAction() {
-		if ($this->request->hasArgument('consumer')) {
-			$key = (int) $this->request->getArgument('consumer');
-		}
+    /**
+     * Delete an existing consumer
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Consumer $consumer
+     *
+     * @return void
+     */
+    public function deleteAction(\Evoweb\SfOauth\Domain\Model\Consumer $consumer)
+    {
+        $this->consumerRepository->remove($consumer->getUid());
 
-		$consumer = $this->consumerRepository->findByUid($key);
-		$this->view->assign('consumer', $consumer);
-	}
+        $this->addFlashMessage(
+            'Your consumer has been removed.',
+            '',
+            FlashMessage::INFO
+        );
 
-	/**
-	 * Updates an existing consumer
-	 *
-	 * @return	void
-	 */
-	public function updateAction() {
-		if ($this->request->hasArgument('consumer')) {
-			$consumerValues = $this->request->getArgument('consumer');
+        $this->redirect('index');
+    }
 
-			$consumer = $this->consumerRepository->findByUid($consumerValues['__identity']);
-			unset($consumerValues['__identity']);
+    /**
+     * Edits an existing consumer
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Consumer $consumer
+     *
+     * @return void Form for editing the existing consumer
+     */
+    public function editAction(\Evoweb\SfOauth\Domain\Model\Consumer $consumer)
+    {
+        $this->view->assign('consumer', $consumer);
+    }
 
-			$this->propertyMapper->map(array_keys($consumerValues), $consumerValues, $consumer);
-		}
+    /**
+     * Updates an existing consumer
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Consumer $consumer
+     *
+     * @return void
+     */
+    public function updateAction(\Evoweb\SfOauth\Domain\Model\Consumer $consumer)
+    {
+        $this->consumerRepository->update($consumer);
 
-		$this->consumerRepository->update($consumer);
-		$this->flashMessages->add('Your consumer has been updated.');
-		$this->redirect('index');
-	}
+        $this->addFlashMessage(
+            'Your consumer has been updated.',
+            '',
+            FlashMessage::INFO
+        );
 
-	/**
-	 * Override getErrorFlashMessage to present nice flash error messages.
-	 *
-	 * @return string
-	 */
-	protected function getErrorFlashMessage() {
-		$result = '';
+        $this->redirect('index');
+    }
 
-		switch ($this->actionMethodName) {
-			case 'updateAction':
-				$result = 'Could not update the consumer:';
-			case 'createAction':
-				$result = 'Could not create the new consumer:';
-			default:
-				$result = parent::getErrorFlashMessage();
-		}
+    /**
+     * Override getErrorFlashMessage to present nice flash error messages.
+     *
+     * @return string
+     */
+    protected function getErrorFlashMessage()
+    {
+        switch ($this->actionMethodName) {
+            case 'updateAction':
+                $result = 'Could not update the consumer:';
+                break;
 
-		return $result;
-	}
+            case 'createAction':
+                $result = 'Could not create the new consumer:';
+                break;
+
+            default:
+                $result = parent::getErrorFlashMessage();
+        }
+
+        return $result;
+    }
 }
-
-?>

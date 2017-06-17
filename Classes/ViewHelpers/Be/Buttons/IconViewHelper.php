@@ -1,23 +1,9 @@
 <?php
-/*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
- *                                                                        *
- * It is free software; you can redistribute it and/or modify it under    *
- * the terms of the GNU Lesser General Public License as published by the *
- * Free Software Foundation, either version 3 of the License, or (at your *
- * option) any later version.                                             *
- *                                                                        *
- * This script is distributed in the hope that it will be useful, but     *
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-    *
- * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser       *
- * General Public License for more details.                               *
- *                                                                        *
- * You should have received a copy of the GNU Lesser General Public       *
- * License along with the script.                                         *
- * If not, see http://www.gnu.org/licenses/lgpl.html                      *
- *                                                                        *
- * The TYPO3 project - inspiring people to share!                         *
- *                                                                        */
+namespace Evoweb\SfOauth\ViewHelpers\Be\Buttons;
+
+use TYPO3\CMS\Core\Imaging\IconRegistry;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * View helper which returns save button with icon
@@ -42,62 +28,81 @@
  * Output:
  * This time the "new_el" icon is returned, the button has the title attribute
  * set and links to the "new" action of the current controller.
- *
- * @package     Fluid
- * @subpackage  ViewHelpers\Be\Buttons
- * @author		Steffen Kamper <info@sk-typo3.de>
- * @author		Bastian Waidelich <bastian@typo3.org>
- * @license     http://www.gnu.org/copyleft/gpl.html
- * @version     SVN: $Id:
- *
  */
-class Tx_SfOauth_ViewHelpers_Be_Buttons_IconViewHelper extends Tx_Fluid_ViewHelpers_Be_AbstractBackendViewHelper {
-	/**
-	 * @var array allowed gifs to be used with this view helper
-	 */
-	protected $allowedGifs = array(
-		'add', 'add_workspace', 'button_down', 'button_hide', 'button_left',
-		'button_unhide', 'button_right', 'button_up', 'clear_cache',
-		'clip_copy', 'clip_cut', 'clip_pasteafter', 'closedok', 'datepicker',
-		'deletedok', 'edit2', 'helpbubble', 'icon_fatalerror', 'icon_note',
-		'icon_ok', 'icon_warning', 'new_el', 'options', 'perm', 'refresh_n',
-		'saveandclosedok', 'savedok', 'savedoknew', 'savedokshow', 'viewdok',
-		'zoom'
-	);
+class IconViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendViewHelper
+{
+    /**
+     * Initialize arguments.
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument(
+            'uri',
+            'string',
+            'The URI for the link. If you want to execute JavaScript here, prefix with "javascript:"',
+            true
+        );
+        $this->registerArgument(
+            'iconKey',
+            'string',
+            'Icon to be used. See IconRegistry::icons for a list of allowed icon names',
+            false,
+            'actions-close'
+        );
+        $this->registerArgument(
+            'title',
+            'string',
+            'Title attribute of the resulting link',
+            false,
+            ''
+        );
+    }
 
-	/**
-	 * @var array allowed pngs to be used with this view helper
-	 */
-	protected $allowdedPngs = array('ok', 'warning', 'error');
+    /**
+     * Renders an icon link as known from the TYPO3 backend
+     *
+     * @return string the rendered icon link
+     */
+    public function render()
+    {
+        return static::renderStatic(
+            $this->arguments,
+            $this->buildRenderChildrenClosure(),
+            $this->renderingContext
+        );
+    }
 
-	/**
-	 * Renders an icon link as known from the TYPO3 backend
-	 *
-	 * @param	string	$uri	the target URI for the link. If you want to
-	 * execute JavaScript here, prefix the URI with "javascript:"
-	 * @param	string	$icon	Icon to be used. See self::allowedGIFs or
-	 * self::allowdedPngs for a list of allowed icon names
-	 * @param	string	$title	Title attribte of the resulting link
-	 * @return	string the rendered icon link
-	 */
-	public function render($uri, $icon = 'closedok', $title = '') {
-		if (!in_array($icon, $this->allowedGifs) AND !in_array($icon, $this->allowdedPngs)) {
-			$allowedIcons = array_merge($this->allowedGifs, $this->allowdedPngs);
+    /**
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     *
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public static function renderStatic(
+        array $arguments,
+        \Closure $renderChildrenClosure,
+        RenderingContextInterface $renderingContext
+    ) {
+        $uri = $arguments['uri'];
+        $title = $arguments['title'];
+        $iconKey = $arguments['iconKey'];
 
-			throw new Tx_Fluid_Core_ViewHelper_Exception(
-				'"' . $icon . '" is no valid icon. Allowed are "' .
-				implode('", "', $allowedIcons) .'".',
-				1253208523
-			);
-		}
+        $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
+        $allowedIcons = $iconRegistry->getAllRegisteredIconIdentifiers();
 
-		if (in_array($icon, $this->allowedGifs)) {
-			$skinnedIcon = t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], 'gfx/' . $icon . '.gif', '');
-		} elseif (in_array($icon, $this->allowdedPngs)) {
-			$skinnedIcon = t3lib_iconWorks::skinImg($GLOBALS['BACK_PATH'], 'gfx/' . $icon . '.png', '');
-		}
-		return '<a href="' . $uri . '"><img' . $skinnedIcon . '" title="' . htmlspecialchars($title) . '" alt="" /></a>';
-	}
+        if (!in_array($iconKey, $allowedIcons)) {
+            throw new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception(
+                '"' . $iconKey . '" is no valid icon. Allowed are "' . implode('", "', $allowedIcons) . '".',
+                1253208523
+            );
+        } else {
+            /** @var \TYPO3\CMS\Core\Imaging\IconFactory $iconFactory */
+            $iconFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconFactory::class);
+            $icon = $iconFactory->getIcon($iconKey, \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL);
+        }
+
+        return '<a href="' . $uri . '" title="' . $title . '">' . $icon . '</a>';
+    }
 }
-
-?>

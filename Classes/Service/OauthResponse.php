@@ -1,4 +1,6 @@
 <?php
+namespace Evoweb\SfOauth\Service;
+
 /***************************************************************
  * Copyright notice
  *
@@ -25,87 +27,84 @@
 
 /**
  * Response encapsulation
- *
- * @author		Sebastian Fischer <typo3@evoweb.de>
- * @package		sf_oauth
- * @subpackage	OauthResult
  */
-class Tx_SfOauth_Service_OauthResponse {
-	/**
-	 * @var	curl resource
-	 */
-	protected $curlHandler;
+class OauthResponse
+{
+    /**
+     * @var resource
+     */
+    protected $curlHandler;
 
-	/**
-	 * @var	array
-	 */
-	protected $responses;
+    /**
+     * @var array
+     */
+    protected $responses;
 
-	/**
-	 * @var	array
-	 */
-	protected $properties = array(
-		'code' => CURLINFO_HTTP_CODE,
-		'time' => CURLINFO_TOTAL_TIME,
-		'length' => CURLINFO_CONTENT_LENGTH_DOWNLOAD,
-		'type' => CURLINFO_CONTENT_TYPE
-	);
+    /**
+     * @var array
+     */
+    protected $properties = array(
+        'code' => CURLINFO_HTTP_CODE,
+        'time' => CURLINFO_TOTAL_TIME,
+        'length' => CURLINFO_CONTENT_LENGTH_DOWNLOAD,
+        'type' => CURLINFO_CONTENT_TYPE,
+    );
 
-	/**
-	 * Constructor of the class
-	 *
-	 * @param	curl_resource	$curlHandler	the handler of the curl connection
-	 * @return	void
-	 */
-	public function __construct($curlHandler) {
-		$this->curlHandler = $curlHandler;
+    /**
+     * Constructor
+     *
+     * @param resource $curlHandler the handler of the curl connection
+     */
+    public function __construct($curlHandler)
+    {
+        $this->curlHandler = $curlHandler;
 
-		$this->responses['data'] = curl_exec($this->curlHandler);
+        $this->responses['data'] = curl_exec($this->curlHandler);
 
-		$this->storeResponses();
-	}
+        $this->storeResponses();
+    }
 
-	/**
-	 * Destructor of the class
-	 *
-	 * @return	void
-	 */
-	public function __destruct() {
-		curl_close($this->curlHandler);
-	}
+    /**
+     * Destructor of the class
+     */
+    public function __destruct()
+    {
+        curl_close($this->curlHandler);
+    }
 
-	/**
-	 * Fetch properties from resourcehandler
-	 * Evaluates data and set class attributed with values
-	 *
-	 * @return	void
-	 */
-	protected function storeResponses() {
-		foreach ($this->properties as $key => $const) {
-			$this->responses[$key] = curl_getinfo($this->curlHandler, $const);
-		}
+    /**
+     * Fetch properties from resource handler
+     * Evaluates data and set class attributed with values
+     *
+     * @return void
+     */
+    protected function storeResponses()
+    {
+        foreach ($this->properties as $key => $const) {
+            $this->responses[$key] = curl_getinfo($this->curlHandler, $const);
+        }
 
-		parse_str($this->responses['data'], $result);
-		foreach ($result as $key => $value) {
-			$this->$key = $value;
-		}
-	}
+        parse_str($this->responses['data'], $result);
+        foreach ($result as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
-	/**
-	 * Magic getter that gets called if an attribute is not available;
-	 *
-	 * @param	string	$name	name of the attribute that should returned
-	 * @return	mixed
-	 */
-	public function __get($name) {
-		$response = NULL;
+    /**
+     * Magic getter that gets called if an attribute is not available;
+     *
+     * @param string $name name of the attribute that should returned
+     *
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        $response = null;
 
-		if (array_key_exists($name, $this->responses)) {
-			$response = $this->responses[$name];
-		}
+        if (array_key_exists($name, $this->responses)) {
+            $response = $this->responses[$name];
+        }
 
-		return $response;
-	}
+        return $response;
+    }
 }
-
-?>

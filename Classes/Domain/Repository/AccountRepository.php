@@ -1,4 +1,6 @@
 <?php
+namespace Evoweb\SfOauth\Domain\Repository;
+
 /***************************************************************
  * Copyright notice
  *
@@ -25,12 +27,7 @@
 
 /**
  * Repository to access accounts
- *
- * @author		Sebastian Fischer <typo3@evoweb.de>
- * @package		sf_oauth
- * @subpackage	AccountRepository
  */
-class Tx_SfOauth_Domain_Repository_AccountRepository extends Tx_SfOauth_Domain_Repository_AbstractRepository {
+class AccountRepository extends AbstractRepository
+{
 }
-
-?>

@@ -1,4 +1,6 @@
 <?php
+namespace Evoweb\SfOauth\Service;
+
 /***************************************************************
  * Copyright notice
  *
@@ -23,281 +25,289 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
- * Connection via curl. This object handels the requests
- *
- * @author		Sebastian Fischer <typo3@evoweb.de>
- * @package		sf_oauth
- * @subpackage	OauthConnection
+ * Connection via curl. This object handles the requests
  */
-class Tx_SfOauth_Service_OauthConnection {
-	/**
-	 * @var	string
-	 */
-	const version = '1.0';
+class OauthConnection
+{
+    /**
+     * @var string
+     */
+    const VERSION = '1.0';
 
-	/**
-	 * @var	Tx_SfOauth_Domain_Model_Account
-	 */
-	protected $account;
+    /**
+     * @var \Evoweb\SfOauth\Domain\Model\Account
+     */
+    protected $account;
 
-	/**
-	 * Setter for account
-	 *
-	 * @param	Tx_SfOauth_Domain_Model_Account	$account	account for request
-	 * @return	void
-	 */
-	public function setAccount($account) {
-		$this->account = $account;
-	}
+    /**
+     * @var string
+     */
+    protected $signatureMethod;
 
-	/**
-	 * Request the service Provider
-	 *
-	 * @param	string	$method	POST or GET
-	 * @param	string	$url	url to call
-	 * @param	array	$params	parameter to transmit
-	 * @return	Tx_SfOauth_Service_OauthResponse
-	 */
-	public function httpRequest($method = NULL, $url = NULL, $params = NULL) {
-		$result = NULL;
+    /**
+     * Setter for account
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Account $account account for request
+     *
+     * @return void
+     */
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
 
-		if (empty($method) OR empty($url)) {
-			$result = FALSE;
-		} else {
-			// if (strpos($url, 'https://') === false) {
-			$this->signatureMethod = 'HMAC-SHA1';
-			// } else {
-			// $this->signatureMethod = 'PLAINTEXT';
-			// }
+    /**
+     * Request the service Provider
+     *
+     * @param string $method POST or GET
+     * @param string $url url to call
+     * @param array $params parameter to transmit
+     *
+     * @return bool|OauthResponse
+     */
+    public function httpRequest($method = null, $url = null, $params = null)
+    {
+        $result = null;
 
-			if (empty($params['oauth_signature'])) {
-				$params = $this->prepareParameters($method, $url, $params);
-			}
+        if (empty($method) || empty($url)) {
+            $result = false;
+        } else {
+            $this->signatureMethod = 'HMAC-SHA1';
 
-			switch (strtolower($method)) {
-				case 'get':
-					$result = $this->httpGet($url, $params);
-					break;
-				case 'post':
-				default:
-					$result = $this->httpPost($url, $params);
-					break;
-			}
-		}
+            if (empty($params['oauth_signature'])) {
+                $params = $this->prepareParameters($method, $url, $params);
+            }
 
-		return $result;
-	}
+            switch (strtolower($method)) {
+                case 'get':
+                    $result = $this->httpGet($url, $params);
+                    break;
+                case 'post':
+                default:
+                    $result = $this->httpPost($url, $params);
+                    break;
+            }
+        }
 
-	/**
-	 * Calls oauth service provider with get parameters
-	 *
-	 * @param	string	$url	url to call
-	 * @param	array	$params	parameters to transmit
-	 * @return	Tx_SfOauth_Service_OauthResponse
-	 */
-	protected function httpGet($url, $params = NULL) {
-		if (count($params['request']) > 0) {
-			$paramParts = array();
-			foreach ($params['request'] as $key => $value) {
-				$paramParts[] = $key . '=' . $value;
-			}
-			$url .= '?' . implode('&', $paramParts);
-		}
+        return $result;
+    }
 
-		$curlHandler = curl_init($url);
-		$this->addOauthHeaders($curlHandler, $url, $params['oauth']);
-		curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, TRUE);
+    /**
+     * Calls oauth service provider with get parameters
+     *
+     * @param string $url url to call
+     * @param array $params parameters to transmit
+     *
+     * @return OauthResponse
+     */
+    protected function httpGet($url, $params = null)
+    {
+        if (count($params['request']) > 0) {
+            $paramParts = array();
+            foreach ($params['request'] as $key => $value) {
+                $paramParts[] = $key . '=' . $value;
+            }
+            $url .= '?' . implode('&', $paramParts);
+        }
 
-		return t3lib_div::makeInstance('Tx_SfOauth_Service_OauthResponse', $curlHandler);
-	}
+        $curlHandler = curl_init($url);
+        $this->addOauthHeaders($curlHandler, $url, $params['oauth']);
+        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, true);
 
-	/**
-	 * Calls oauth service provider with post parameters
-	 *
-	 * @param	string	$url	url to call
-	 * @param	array	$params	parameters to transmit
-	 * @return	Tx_SfOauth_Service_OauthResponse
-	 */
-	protected function httpPost($url, $params = NULL) {
-		$curlHandler = curl_init($url);
-		$this->addOauthHeaders($curlHandler, $url, $params['oauth']);
-		curl_setopt($curlHandler, CURLOPT_POST, 1);
-		curl_setopt($curlHandler, CURLOPT_POSTFIELDS, http_build_query($params['request']));
-		curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, TRUE);
+        /** @var OauthResponse $response */
+        $response = GeneralUtility::makeInstance(OauthResponse::class, $curlHandler);
+        return $response;
+    }
 
-		return t3lib_div::makeInstance('Tx_SfOauth_Service_OauthResponse', $curlHandler);
-	}
+    /**
+     * Calls oauth service provider with post parameters
+     *
+     * @param string $url url to call
+     * @param array $params parameters to transmit
+     *
+     * @return OauthResponse
+     */
+    protected function httpPost($url, $params = null)
+    {
+        $curlHandler = curl_init($url);
+        $this->addOauthHeaders($curlHandler, $url, $params['oauth']);
+        curl_setopt($curlHandler, CURLOPT_POST, 1);
+        curl_setopt($curlHandler, CURLOPT_POSTFIELDS, http_build_query($params['request']));
+        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, true);
 
-	/**
-	 * Addes header information to curlHandler and returns it
-	 *
-	 * @param	curl_resource	&$curlHandler	curl handler by reference
-	 * @param	string	$url	url to call
-	 * @param	array	$oauthHeaders	header data to set
-	 * @return	void
-	 */
-	protected function addOauthHeaders(&$curlHandler, $url, $oauthHeaders) {
-		$urlParts = parse_url($url);
-		$oauth = 'Authorization: OAuth realm="' . $urlParts['path'] . '", ';
+        /** @var OauthResponse $response */
+        $response = GeneralUtility::makeInstance(OauthResponse::class, $curlHandler);
+        return $response;
+    }
 
-		$headerParts = array();
-		foreach ($oauthHeaders as $key => $value) {
-			$headerParts[] =  $this->encode($key) . '="' . $this->encode($value) . '"';
-		}
-		$oauth .= implode(', ', $headerParts);
+    /**
+     * Adds header information to curlHandler and returns it
+     *
+     * @param resource &$curlHandler curl handler by reference
+     * @param string $url url to call
+     * @param array $oauthHeaders header data to set
+     *
+     * @return void
+     */
+    protected function addOauthHeaders(&$curlHandler, $url, $oauthHeaders)
+    {
+        $urlParts = parse_url($url);
+        $oauth = 'Authorization: OAuth realm="' . $urlParts['path'] . '", ';
 
-		$header = array('Expect:', $oauth);
+        $headerParts = array();
+        foreach ($oauthHeaders as $key => $value) {
+            $headerParts[] = $this->encode($key) . '="' . $this->encode($value) . '"';
+        }
+        $oauth .= implode(', ', $headerParts);
 
-		curl_setopt($curlHandler, CURLOPT_HTTPHEADER, $header);
-	}
+        $header = array('Expect:', $oauth);
 
-	/**
-	 * Gather information for the request params
-	 *
-	 * @param	string	$method	POST or GET
-	 * @param	string	$url	url to call
-	 * @param	array	$params	parameters to set
-	 * @return	array
-	 */
-	protected function prepareParameters($method = NULL, $url = NULL, $params = NULL) {
-		if (empty($method) OR empty($url)) {
-			return FALSE;
-		}
+        curl_setopt($curlHandler, CURLOPT_HTTPHEADER, $header);
+    }
 
-		$request = (array) $params['request'];
+    /**
+     * Gather information for the request params
+     *
+     * @param string $method POST or GET
+     * @param string $url url to call
+     * @param array $params parameters to set
+     *
+     * @return array
+     */
+    protected function prepareParameters($method = null, $url = null, $params = null)
+    {
+        if (empty($method) || empty($url)) {
+            return [];
+        }
 
-		$oauth = $params['oauth'];
-		$oauth['oauth_consumer_key'] = $this->account->getConsumer()->getKey();
-		$oauth['oauth_nonce'] = $this->getNonce();
-		$oauth['oauth_timestamp'] = $this->getTimestamp();
-		$oauth['oauth_signature_method'] = $this->signatureMethod;
-		$oauth['oauth_version'] = self::version;
+        $request = (array)$params['request'];
 
-		if (!$oauth['oauth_token'] AND $this->account->getConsumerToken()) {
-			$oauth['oauth_token'] = $this->account->getConsumerToken();
-		}
+        $oauth = $params['oauth'];
+        $oauth['oauth_consumer_key'] = $this->account->getConsumer()->getKey();
+        $oauth['oauth_nonce'] = $this->getNonce();
+        $oauth['oauth_timestamp'] = $GLOBALS['EXEC_TIME'];
+        $oauth['oauth_signature_method'] = $this->signatureMethod;
+        $oauth['oauth_version'] = self::VERSION;
 
-		$encodedParams = array_merge($oauth, $request);
-		ksort($encodedParams);
+        if (!$oauth['oauth_token'] && $this->account->getConsumerToken()) {
+            $oauth['oauth_token'] = $this->account->getConsumerToken();
+        }
 
-			// signing
-		$oauth['oauth_signature'] = $this->generateSignature($method, $url, $encodedParams);
+        $encodedParams = array_merge($oauth, $request);
+        ksort($encodedParams);
 
-		return array('request' => $request, 'oauth' => $oauth);
-	}
+        // signing
+        $oauth['oauth_signature'] = $this->generateSignature($method, $url, $encodedParams);
 
-	/**
-	 * Generate the signature for the request
-	 *
-	 * @param	string	$method	PUT or GET
-	 * @param	string	$url	url to call
-	 * @param	array	$params	parameters to transmit
-	 * @return	string
-	 */
-	protected function generateSignature($method = NULL, $url = NULL, $params = NULL) {
-		if (empty($method) OR empty($url)) {
-			return FALSE;
-		}
+        return array('request' => $request, 'oauth' => $oauth);
+    }
 
-			// concatenating
-		$concatenatedParams = array();
-		foreach ($params as $key => $value) {
-			$value = $this->encode($value);
-			$concatenatedParams[] = $key . '=' . $value;
-		}
-		$concatenatedParams = $this->encode(implode('&', $concatenatedParams));
+    /**
+     * Generate the signature for the request
+     *
+     * @param string $method PUT or GET
+     * @param string $url url to call
+     * @param array $params parameters to transmit
+     *
+     * @return string
+     */
+    protected function generateSignature($method = null, $url = null, $params = null)
+    {
+        if (empty($method) || empty($url)) {
+            return '';
+        }
 
-			// normalize url
-		$normalizedUrl = $this->encode($this->normalizeUrl($url));
+        // concatenating
+        $concatenatedParams = array();
+        foreach ($params as $key => $value) {
+            $value = $this->encode($value);
+            $concatenatedParams[] = $key . '=' . $value;
+        }
+        $concatenatedParams = $this->encode(implode('&', $concatenatedParams));
 
-		$signatureBaseString = $method . '&' . $normalizedUrl . '&' . $concatenatedParams;
-		return $this->signString($signatureBaseString);
-	}
+        // normalize url
+        $normalizedUrl = $this->encode($this->normalizeUrl($url));
 
-	/**
-	 * Sign the url string if signing method HMAC-SHA1 is used
-	 *
-	 * @param	string	$baseString	basic string to encode
-	 * @return	string
-	 */
-	protected function signString($baseString = NULL) {
-		$signedUrl = FALSE;
+        $signatureBaseString = $method . '&' . $normalizedUrl . '&' . $concatenatedParams;
 
-		switch ($this->signatureMethod) {
-			case 'HMAC-SHA1':
-			default:
-				$key = implode('&', array(
-					$this->encode($this->account->getConsumer()->getSecret()),
-					$this->account->getConsumerSecret() ?
-						$this->encode($this->account->getConsumerSecret()) :
-						''
-				));
+        return $this->signString($signatureBaseString);
+    }
 
-				$signedUrl = base64_encode(hash_hmac('sha1', $baseString, $key, TRUE));
-				break;
-		}
+    /**
+     * Sign the url string if signing method HMAC-SHA1 is used
+     *
+     * @param string $baseString basic string to encode
+     *
+     * @return string
+     */
+    protected function signString($baseString = null)
+    {
+        switch ($this->signatureMethod) {
+            case 'HMAC-SHA1':
+            default:
+                $key = implode('&', [
+                    $this->encode($this->account->getConsumer()->getSecret()),
+                    $this->account->getConsumerSecret() ? $this->encode($this->account->getConsumerSecret()) : '',
+                ]);
 
-		return $signedUrl;
-	}
+                $signedUrl = base64_encode(hash_hmac('sha1', $baseString, $key, true));
+                break;
+        }
 
-	/**
-	 * Normalize the request url
-	 *
-	 * @param	string	$url	url to normalize
-	 * @return	string
-	 */
-	protected function normalizeUrl($url = NULL) {
-		$urlParts = parse_url($url);
-		$scheme = strtolower($urlParts['scheme']);
-		$host = strtolower($urlParts['host']);
-		$port = isset($urlParts['port']) ? intval($urlParts['port']) : 0;
+        return $signedUrl;
+    }
 
-		$normalizedUrl = $scheme . '://' . $host;
+    /**
+     * Normalize the request url
+     *
+     * @param string $url url to normalize
+     *
+     * @return string
+     */
+    protected function normalizeUrl($url = null)
+    {
+        $urlParts = parse_url($url);
+        $scheme = strtolower($urlParts['scheme']);
+        $host = strtolower($urlParts['host']);
+        $port = isset($urlParts['port']) ? intval($urlParts['port']) : 0;
 
-		if ($port > 0 AND (
-					($scheme === 'http' AND $port !== 80) OR
-					($scheme === 'https' AND $port !== 443)
-				)) {
-			$normalizedUrl .= ':' . $port;
-		}
+        $normalizedUrl = $scheme . '://' . $host;
 
-		$normalizedUrl .= $urlParts['path'];
+        if ($port > 0 && (($scheme === 'http' && $port !== 80) || ($scheme === 'https' && $port !== 443))) {
+            $normalizedUrl .= ':' . $port;
+        }
 
-		if (!empty($urlParts['query'])) {
-			$normalizedUrl .= '?' . $urlParts['query'];
-		}
+        $normalizedUrl .= $urlParts['path'];
 
-		return $normalizedUrl;
-	}
+        if (!empty($urlParts['query'])) {
+            $normalizedUrl .= '?' . $urlParts['query'];
+        }
 
-	/**
-	 * utf8_encodes the string and returns the rawurlencodes result
-	 *
-	 * @param	string	$string	string to encode
-	 * @return	string
-	 */
-	public function encode($string) {
-		return rawurlencode(utf8_encode($string));
-	}
+        return $normalizedUrl;
+    }
 
-	/**
-	 * Generate a uniqid based on random value and return the md5 hashed result
-	 *
-	 * @return	string
-	 */
-	protected function getNonce() {
-		return md5(uniqid(rand(), TRUE));
-	}
+    /**
+     * utf8_encodes the string and returns the rawurlencodes result
+     *
+     * @param string $string string to encode
+     *
+     * @return string
+     */
+    public function encode($string)
+    {
+        return rawurlencode(utf8_encode($string));
+    }
 
-	/**
-	 * Returns the exec_time of TYPO3
-	 *
-	 * @return	integer
-	 */
-	protected function getTimestamp() {
-		return $GLOBALS['EXEC_TIME'];
-	}
+    /**
+     * Generate a uniqid based on random value and return the md5 hashed result
+     *
+     * @return string
+     */
+    protected function getNonce()
+    {
+        return md5(uniqid(rand(), true));
+    }
 }
-
-?>

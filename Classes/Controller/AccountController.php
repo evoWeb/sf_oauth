@@ -1,4 +1,6 @@
 <?php
+namespace Evoweb\SfOauth\Controller;
+
 /***************************************************************
  * Copyright notice
  *
@@ -23,174 +25,199 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Account controller
- *
- * @author		Sebastian Fischer <typo3@evoweb.de>
- * @package		sf_oauth
- * @subpackage	AccountController
  */
-class Tx_SfOauth_Controller_AccountController extends Tx_Extbase_MVC_Controller_ActionController {
-	/**
-	 * @var Tx_SfOauth_Domain_Repository_AccountRepository
-	 */
-	protected $accountRepository;
+class AccountController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
+{
+    /**
+     * @var \Evoweb\SfOauth\Domain\Repository\AccountRepository
+     */
+    protected $accountRepository;
 
-	/**
-	 * @var Tx_SfOauth_Domain_Repository_ConsumerRepository
-	 */
-	protected $consumerRepository;
+    /**
+     * @var \Evoweb\SfOauth\Domain\Repository\ConsumerRepository
+     */
+    protected $consumerRepository;
 
-	/**
-	 * Initialize all actions
-	 *
-	 * @return	void
-	 */
-	protected function initializeAction() {
-		$this->accountRepository = t3lib_div::makeInstance('Tx_SfOauth_Domain_Repository_AccountRepository');
-		$this->consumerRepository = t3lib_div::makeInstance('Tx_SfOauth_Domain_Repository_ConsumerRepository');
-	}
+    /**
+     * Initialize all actions
+     *
+     * @return void
+     */
+    protected function initializeAction()
+    {
+        $this->accountRepository = $this->objectManager->get(
+            \Evoweb\SfOauth\Domain\Repository\AccountRepository::class
+        );
+        $this->consumerRepository = $this->objectManager->get(
+            \Evoweb\SfOauth\Domain\Repository\ConsumerRepository::class
+        );
+    }
 
-	/**
-	 * Indexes all accounts
-	 *
-	 * @return	void
-	 */
-	public function indexAction() {
-		$this->view->assign('accounts', $this->accountRepository->findAll());
-	}
+    /**
+     * Indexes all accounts
+     *
+     * @return void
+     */
+    public function indexAction()
+    {
+        $this->view->assign('accounts', $this->accountRepository->findAll());
+    }
 
-	/**
-	 * Displays a form for creating a new account
-	 *
-	 * @param	Tx_SfOauth_Domain_Model_Account	$newAccount	form information object
-	 * @return	string	An HTML form for creating a new account
-	 * @dontvalidate $newAccount
-	 */
-	public function newAction(Tx_SfOauth_Domain_Model_Account $newAccount = NULL) {
-		$this->view->assign('newAccount', $newAccount);
+    /**
+     * Displays a form for creating a new account
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Account $newAccount form information object
+     *
+     * @return void An HTML form for creating a new account
+     *
+     * @ignorevalidation $newAccount
+     */
+    public function newAction(\Evoweb\SfOauth\Domain\Model\Account $newAccount = null)
+    {
+        $this->view->assign('newAccount', $newAccount);
 
-		$consumers = $this->consumerRepository->findAll();
-		$this->view->assign('consumers', $consumers);
-	}
+        $consumers = $this->consumerRepository->findAll();
 
-	/**
-	 * Creates a new consumer
-	 *
-	 * @param	Tx_SfOauth_Domain_Model_Account	$newAccount	information for account
-	 * @return	void
-	 */
-	public function createAction(Tx_SfOauth_Domain_Model_Account $newAccount) {
-		$this->accountRepository->add($newAccount);
-		$this->flashMessages->add('Your new account was created.');
-		$this->redirect('index');
-	}
+        $this->view->assign('consumers', $consumers);
+    }
 
-	/**
-	 * Deletes an existing account
-	 *
-	 * @return	void
-	 */
-	public function deleteAction() {
-		if ($this->request->hasArgument('account')) {
-			$uid = (int) $this->request->getArgument('account');
-		}
+    /**
+     * Creates a new consumer
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Account $newAccount information for account
+     *
+     * @return void
+     */
+    public function createAction(\Evoweb\SfOauth\Domain\Model\Account $newAccount)
+    {
+        $this->accountRepository->add($newAccount);
 
-		$this->accountRepository->remove($uid);
-		$this->flashMessages->add('Your account has been removed.');
-		$this->redirect('index');
-	}
+        $this->addFlashMessage(
+            'Your new account was created.',
+            '',
+            FlashMessage::INFO
+        );
 
-	/**
-	 * Edits an existing account
-	 *
-	 * @return	string	Form for editing the existing account
-	 * @dontvalidate $account
-	 */
-	public function editAction() {
-		if ($this->request->hasArgument('account')) {
-			$key = (int) $this->request->getArgument('account');
-		}
+        $this->redirect('index');
+    }
 
-		$account = $this->accountRepository->findByUid($key);
-		$this->view->assign('account', $account);
-	}
+    /**
+     * Deletes an existing account
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Account $account
+     *
+     * @return void
+     */
+    public function deleteAction(\Evoweb\SfOauth\Domain\Model\Account $account)
+    {
+        $this->accountRepository->remove($account->getUid());
 
-	/**
-	 * Updates an existing account
-	 *
-	 * @return	void
-	 */
-	public function updateAction() {
-		if ($this->request->hasArgument('editAccount')) {
-			$accountValues = $this->request->getArgument('editAccount');
+        $this->addFlashMessage(
+            'Your account has been removed.',
+            '',
+            FlashMessage::INFO
+        );
 
-			$account = $this->accountRepository->findByUid($accountValues['__identity']);
-			unset($accountValues['__identity']);
+        $this->redirect('index');
+    }
 
-			$this->propertyMapper->map(array_keys($accountValues), $accountValues, $account);
-		}
+    /**
+     * Edits an existing account
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Account $account
+     *
+     * @return void Form for editing the existing account
+     */
+    public function editAction(\Evoweb\SfOauth\Domain\Model\Account $account)
+    {
+        $this->view->assign('account', $account);
+    }
 
-		$this->accountRepository->update($account);
-		$this->flashMessages->add('Your account has been updated.');
-		$this->redirect('index');
-	}
+    /**
+     * Updates an existing account
+     *
+     * @param \Evoweb\SfOauth\Domain\Model\Account $account
+     *
+     * @return void
+     */
+    public function updateAction(\Evoweb\SfOauth\Domain\Model\Account $account)
+    {
+        $this->accountRepository->update($account);
 
-	/**
-	 * Authorize agains oauth service provider
-	 *
-	 * @return	string An HTML form for creating a new account
-	 */
-	public function authorizeAction() {
-		if ($this->request->hasArgument('account')) {
-			$key = (int) $this->request->getArgument('account');
-		}
+        $this->addFlashMessage(
+            'Your account has been updated.',
+            '',
+            FlashMessage::INFO
+        );
 
-		$oauthService = t3lib_div::makeInstanceService('tx_sf_oauth_consumer');
-		$oauthService->setAccount($key);
+        $this->redirect('index');
+    }
 
-		$callbackUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/typo3/mod.php?' .
-			'M=tools_SfOauthTxSfoauthM1&' .
-			'tx_sfoauth_tools_sfoauthtxsfoauthm1[controller]=Account&' .
-			'tx_sfoauth_tools_sfoauthtxsfoauthm1[action]=accepted&' .
-			'tx_sfoauth_tools_sfoauthtxsfoauthm1[account]=' . $key;
-		$response = $oauthService->getRequestToken($callbackUrl);
+    /**
+     * Authorize against oauth service provider
+     *
+     * @return void An HTML form for creating a new account
+     */
+    public function authorizeAction()
+    {
+        $key = '';
+        if ($this->request->hasArgument('account')) {
+            $key = (int)$this->request->getArgument('account');
+        }
 
-		if ($response->code == 200) {
-			$this->view->assign('authorizationUrl', $oauthService->getAuthenticationUrl($response->oauth_token));
-		} else {
-			$this->flashMessages->add('Twitter was not accessible or responded in an unexpected way. [' . $response->code . ']');
-			$this->redirect('index');
-		}
-	}
+        $oauthService = GeneralUtility::makeInstanceService('tx_sf_oauth_consumer');
+        $oauthService->setAccount($key);
 
-	/**
-	 * Our request was accepted and this is the resulting message
-	 *
-	 * @return	string An HTML form for creating a new account
-	 */
-	public function acceptedAction() {
-		if ($this->request->hasArgument('account')) {
-			$key = (int) $this->request->getArgument('account');
-		}
+        $callbackUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/typo3/mod.php?' .
+            'M=tools_SfOauthTxSfoauthM1&' .
+            'tx_sfoauth_tools_sfoauthtxsfoauthm1[controller]=Account&' .
+            'tx_sfoauth_tools_sfoauthtxsfoauthm1[action]=accepted&' . 'tx_sfoauth_tools_sfoauthtxsfoauthm1[account]=' .
+            $key;
+        $response = $oauthService->getRequestToken($callbackUrl);
 
-		$oauthService = t3lib_div::makeInstanceService('tx_sf_oauth_consumer');
-		$oauthService->setAccount($key);
-		$oauthService->setToken($_GET['oauth_token']);
+        if ($response->code == 200) {
+            $this->view->assign('authorizationUrl', $oauthService->getAuthenticationUrl($response->oauth_token));
+        } else {
+            $this->addFlashMessage(
+                'Twitter was not accessible or responded in an unexpected way. [' . $response->code . ']',
+                '',
+                FlashMessage::ERROR
+            );
 
-		$response = $oauthService->getAccessToken($_GET['oauth_verifier']);
+            $this->redirect('index');
+        }
+    }
 
-		if ($response->code == 200) {
-			$this->accountRepository = t3lib_div::makeInstance('Tx_SfOauth_Domain_Repository_AccountRepository');
+    /**
+     * Our request was accepted and this is the resulting message
+     *
+     * @return void An HTML form for creating a new account
+     */
+    public function acceptedAction()
+    {
+        $key = '';
+        if ($this->request->hasArgument('account')) {
+            $key = (int)$this->request->getArgument('account');
+        }
 
-			$account = $this->accountRepository->findByUid($key);
-			$account->setConsumerToken($response->oauth_token);
-			$account->setConsumerSecret($response->oauth_token_secret);
-			$account->setStatus(0);
+        $oauthService = GeneralUtility::makeInstanceService('tx_sf_oauth_consumer');
+        $oauthService->setAccount($key);
+        $oauthService->setToken($_GET['oauth_token']);
 
-			$this->accountRepository->update($account);
-		}
-	}
+        $response = $oauthService->getAccessToken($_GET['oauth_verifier']);
+
+        if ($response->code == 200) {
+            $account = $this->accountRepository->findByUid($key);
+            $account->setConsumerToken($response->oauth_token);
+            $account->setConsumerSecret($response->oauth_token_secret);
+            $account->setStatus(0);
+
+            $this->accountRepository->update($account);
+        }
+    }
 }
-
-?>
