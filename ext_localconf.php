@@ -17,7 +17,7 @@ call_user_func(function () {
             'exec' => '',
             'classFile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('sf_oauth') .
                 'Classes/Service/OauthConsumer.php',
-            'className' => 'Tx_SfOauth_Service_OauthConsumer',
+            'className' => \Evoweb\SfOauth\Service\OauthConsumer::class,
         ]
     );
 });

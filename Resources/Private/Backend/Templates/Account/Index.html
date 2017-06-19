@@ -1,6 +1,8 @@
-{namespace sfoa = Tx_SfOauth_ViewHelpers}
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+		xmlns:sfoa="http://typo3.org/ns/Evoweb/SfOauth/ViewHelpers"
+		data-namespace-typo3-fluid="true">
 
-<f:layout name="default" />
+<f:layout name="Default" />
 
 <f:section name="iconButtons"/>
 
@@ -9,7 +11,7 @@
 <table cellspacing="0" cellpadding="0" border="0" class="typo3-dblist">
 
 	<!-- Element, begin: -->
-	<tbody>
+	<thead>
 		<tr class="c-table-row-spacer">
 			<td nowrap="nowrap" class="col-icon"><img width="1" height="8" alt="" src="clear.gif"></td>
 			<td nowrap="nowrap" class=""><img width="100" height="1" alt="" src="clear.gif"></td>
@@ -23,7 +25,7 @@
 		</tr>
 		<!-- Element, begin: -->
 		<tr class="c-headLine">
-			<td nowrap="nowrap" class="col-icon"><sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}" icon="new_el" title="{f:translate(key: 'new_account')}" /></td>
+			<td nowrap="nowrap" class="col-icon"><f:format.raw><sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}" iconKey="actions-document-new" title="{f:translate(key: 'new_account')}" /></f:format.raw></td>
 			<td nowrap="nowrap" class="col-title"><a><f:translate key="account_title"/>:</a></td>
 			<td nowrap="nowrap" class="col-clipboard">&nbsp;</td>
 			<td nowrap="nowrap" class="col-control-space">&nbsp;</td>
@@ -31,22 +33,24 @@
 			<td nowrap="nowrap" class=""><f:translate key="account_key"/>:</td>
 			<td nowrap="nowrap" class=""></td>
 		</tr>
+	</thead>
+	<tbody>
 <f:for each="{accounts}" as="account">
 		<!-- Element, begin: -->
 		<tr class="db_list_normal firstcol lastcol">
 			<td nowrap="nowrap" class="col-icon"></td>
 			<td nowrap="nowrap" class="col-title">{account.title}</td>
 			<td nowrap="nowrap" class="col-clipboard">
-				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'edit', arguments:{account: account.uid})}" icon="edit2" title="{f:translate(key: 'edit')} '{account.title}'" />
+				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'edit', arguments: {account: account.uid})}" iconKey="edit2" title="{f:translate(key: 'edit')} '{account.title}'" />
 				<f:link.action action="delete" arguments="{account: account.uid}"><img src="sysext/t3skin/icons/gfx/garbage.gif" alt="" title="{f:translate(key: 'delete')} '{account.title}'"/></f:link.action>
 			<f:if condition="{account.hasWarning}">
-				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'authorize', arguments: {account: account.uid})}" icon="warning" />
+				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'authorize', arguments: {account: account.uid})}" iconKey="warning" />
 			</f:if>
 			<f:if condition="{account.hasError}">
-				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}" icon="error" />
+				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}" iconKey="error" />
 			</f:if>
 			<f:if condition="{account.isOk}">
-				<sfoa:be.buttons.icon uri="" icon="ok" />
+				<sfoa:be.buttons.icon uri="" iconKey="ok" />
 			</f:if>
 			</td>
 			<td nowrap="nowrap" class="col-control-space">&nbsp;</td>
@@ -64,3 +68,5 @@
 </table>
 
 </f:section>
+
+</html>

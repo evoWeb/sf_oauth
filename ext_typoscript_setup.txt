@@ -1,8 +1,8 @@
 # Module configuration
 module.tx_sfoauth {
 	view {
-		layoutRootPath = EXT:sf_oauth/Resources/Private/Backend/Layouts/
-		templateRootPath = EXT:sf_oauth/Resources/Private/Backend/Templates/
-		partialRootPath = EXT:sf_oauth/Resources/Private/Partials/
+		layoutRootPaths.0 = EXT:sf_oauth/Resources/Private/Backend/Layouts/
+		templateRootPaths.0 = EXT:sf_oauth/Resources/Private/Backend/Templates/
+		partialRootPaths.0 = EXT:sf_oauth/Resources/Private/Partials/
 	}
 }

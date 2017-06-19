@@ -1,10 +1,12 @@
-{namespace sfoa = Tx_SfOauth_ViewHelpers}
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+		xmlns:sfoa="http://typo3.org/ns/Evoweb/SfOauth/ViewHelpers"
+		data-namespace-typo3-fluid="true">
 
 <f:layout name="default" />
 
 <f:section name="iconButtons">
-	<sfoa:be.buttons.icon uri="{f:uri.action(action: 'index')}" icon="closedok" title="{f:translate(key: 'cancel')}" />
-	<sfoa:be.buttons.icon uri="javascript: document.consumer.submit();" icon="saveandclosedok" title="{f:translate(key: 'save')}" />
+	<sfoa:be.buttons.icon uri="{f:uri.action(action: 'index')}" iconKey="closedok" title="{f:translate(key: 'cancel')}" />
+	<sfoa:be.buttons.icon uri="javascript: document.consumer.submit();" iconKey="saveandclosedok" title="{f:translate(key: 'save')}" />
 </f:section>
 
 <f:section name="content">

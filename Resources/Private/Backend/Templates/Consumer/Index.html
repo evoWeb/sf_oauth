@@ -1,4 +1,5 @@
-{namespace sfoa = Tx_SfOauth_ViewHelpers}
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+		data-namespace-typo3-fluid="true">
 
 <f:layout name="default" />
 
@@ -23,7 +24,7 @@
 		</tr>
 		<!-- Element, begin: -->
 		<tr class="c-headLine">
-			<td nowrap="nowrap" class="col-icon"><f:be.buttons.icon uri="{f:uri.action(action: 'new')}" icon="new_el" title="{f:translate(key: 'new_consumer')}" /></td>
+			<td nowrap="nowrap" class="col-icon"><f:be.buttons.icon uri="{f:uri.action(action: 'new')}" iconKey="new_el" title="{f:translate(key: 'new_consumer')}" /></td>
 			<td nowrap="nowrap" class="col-title"><a><f:translate key="consumer_title"/>:</a></td>
 			<td nowrap="nowrap" class="col-clipboard">&nbsp;</td>
 			<td nowrap="nowrap" class="col-control-space">&nbsp;</td>
@@ -37,7 +38,7 @@
 			<td nowrap="nowrap" class="col-icon"></td>
 			<td nowrap="nowrap" class="col-title">{consumer.title}</td>
 			<td nowrap="nowrap" class="col-clipboard">
-				<f:be.buttons.icon uri="{f:uri.action(action: 'edit', arguments:{consumer: consumer.uid})}" icon="edit2" title="Edit '{consumer.title}'" />
+				<f:be.buttons.icon uri="{f:uri.action(action: 'edit', arguments:{consumer: consumer.uid})}" iconKey="edit2" title="Edit '{consumer.title}'" />
 				<f:link.action action="delete" arguments="{consumer: consumer.uid}"><img src="sysext/t3skin/icons/gfx/garbage.gif" alt="" title="Delete '{consumer.title}'"/></f:link.action>
 			</td>
 			<td nowrap="nowrap" class="col-control-space">&nbsp;</td>
@@ -50,3 +51,5 @@
 </table>
 
 </f:section>
+
+</html>

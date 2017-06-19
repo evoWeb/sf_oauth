@@ -7,7 +7,7 @@ call_user_func(function () {
          * Registers a Backend Module
          */
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-            'sf_oauth',
+            'Evoweb.sf_oauth',
             'tools',
             'tx_sfoauth_m1',
             '',
