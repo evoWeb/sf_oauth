@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-06-19T05:07:41Z" product-name="sf_oauth">
+		<header/>
+		<body>
+			<trans-unit id="tt_content.librarian_pi1" xml:space="preserve">
+				<source>Librarian</source>
+			</trans-unit>
+			<trans-unit id="wizardicon_title" xml:space="preserve">
+				<source>Media List</source>
+			</trans-unit>
+			<trans-unit id="wizardicon_description" xml:space="preserve">
+				<source>Lists the media of librarian</source>
+			</trans-unit>
+			<trans-unit id="flexform_pi1.generaltab" xml:space="preserve">
+				<source>General Settings</source>
+			</trans-unit>
+			<trans-unit id="flexform_pi1.what_to_display" xml:space="preserve">
+				<source>What to display</source>
+			</trans-unit>
+			<trans-unit id="flexform_pi1.what_to_display.mediaindex" xml:space="preserve">
+				<source>Index of media</source>
+			</trans-unit>
+			<trans-unit id="flexform_pi1.what_to_display.mediatest" xml:space="preserve">
+				<source>Test</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

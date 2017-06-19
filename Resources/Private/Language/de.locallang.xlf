@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-06-19T05:07:36Z" product-name="sf_oauth">
+		<header/>
+		<body>
+			<trans-unit id="consumer_index" xml:space="preserve" approved="yes">
+				<source>Consumer Overview</source>
+				<target>Verbraucher Übersicht</target>
+			</trans-unit>
+			<trans-unit id="consumer_title" xml:space="preserve" approved="yes">
+				<source>Title</source>
+				<target>Titel</target>
+			</trans-unit>
+			<trans-unit id="consumer_key" xml:space="preserve" approved="yes">
+				<source>Consumer key</source>
+				<target>Verbraucher Key</target>
+			</trans-unit>
+			<trans-unit id="consumer_secret" xml:space="preserve" approved="yes">
+				<source>Consumer secret</source>
+				<target>Verbraucher Secret</target>
+			</trans-unit>
+			<trans-unit id="consumer_requesturl" xml:space="preserve" approved="yes">
+				<source>Request token URL</source>
+				<target>Abfragetoken URL</target>
+			</trans-unit>
+			<trans-unit id="consumer_accessurl" xml:space="preserve" approved="yes">
+				<source>Access token URL</source>
+				<target>Zugangstoken URL</target>
+			</trans-unit>
+			<trans-unit id="consumer_authorizeurl" xml:space="preserve" approved="yes">
+				<source>Authorize URL</source>
+				<target>Autorisierung URL</target>
+			</trans-unit>
+			<trans-unit id="consumer_authenticateurl" xml:space="preserve" approved="yes">
+				<source>Authenticate URL</source>
+				<target>Authenticate URL</target>
+			</trans-unit>
+			<trans-unit id="consumer_apiurl" xml:space="preserve" approved="yes">
+				<source>Api URL</source>
+				<target>Api URL</target>
+			</trans-unit>
+			<trans-unit id="account_index" xml:space="preserve" approved="yes">
+				<source>Account Overview</source>
+				<target>Account Übersicht</target>
+			</trans-unit>
+			<trans-unit id="account_title" xml:space="preserve" approved="yes">
+				<source>Title</source>
+				<target>Titel</target>
+			</trans-unit>
+			<trans-unit id="account_key" xml:space="preserve" approved="yes">
+				<source>AccountID</source>
+				<target>AccountID</target>
+			</trans-unit>
+			<trans-unit id="account_consumer" xml:space="preserve" approved="yes">
+				<source>consumer to use</source>
+				<target>zu verwendender Konsument</target>
+			</trans-unit>
+			<trans-unit id="account_consumer_title" xml:space="preserve" approved="yes">
+				<source>Consumertitle</source>
+				<target>Verbrauchertitel</target>
+			</trans-unit>
+			<trans-unit id="edit" xml:space="preserve" approved="yes">
+				<source>Edit of</source>
+				<target>Bearbeiten von</target>
+			</trans-unit>
+			<trans-unit id="delete" xml:space="preserve" approved="yes">
+				<source>Delete of</source>
+				<target>Löschen von</target>
+			</trans-unit>
+			<trans-unit id="cancel" xml:space="preserve" approved="yes">
+				<source>Cancel</source>
+				<target>Abbrechen</target>
+			</trans-unit>
+			<trans-unit id="save" xml:space="preserve" approved="yes">
+				<source>Save</source>
+				<target>Speichern</target>
+			</trans-unit>
+			<trans-unit id="new_account" xml:space="preserve" approved="yes">
+				<source>Create new account</source>
+				<target>Neuen Account erstellen</target>
+			</trans-unit>
+			<trans-unit id="new_consumer" xml:space="preserve" approved="yes">
+				<source>Create new consumer</source>
+				<target>Neuen Verbraucher erstellen</target>
+			</trans-unit>
+			<trans-unit id="authorization_needed" xml:space="preserve" approved="yes">
+				<source>Authorization is needed before an account can be used.</source>
+				<target>Eine Autorization ist vor der Verwendung notwendig.</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

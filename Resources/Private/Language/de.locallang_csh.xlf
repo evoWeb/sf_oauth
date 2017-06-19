@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-06-19T05:07:45Z" product-name="sf_oauth">
+		<header/>
+		<body>
+			<trans-unit id="consumer_key.alttitle" xml:space="preserve" approved="yes">
+				<source>Key</source>
+				<target>Key</target>
+			</trans-unit>
+			<trans-unit id="consumer_key.description" xml:space="preserve" approved="yes">
+				<source>Key is the registered application key</source>
+				<target>Key ist der hinterlegt Anwendungsschlüssel</target>
+			</trans-unit>
+			<trans-unit id="account_key.alttitle" xml:space="preserve" approved="yes">
+				<source></source>
+				<target>Key</target>
+			</trans-unit>
+			<trans-unit id="account_key.description" xml:space="preserve" approved="yes">
+				<source></source>
+				<target>This is needed to select an account to use in the service</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

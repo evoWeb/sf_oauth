@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-06-19T05:07:36Z" product-name="sf_oauth">
+		<header/>
+		<body>
+			<trans-unit id="consumer_index" xml:space="preserve">
+				<source>Consumer Overview</source>
+			</trans-unit>
+			<trans-unit id="consumer_title" xml:space="preserve">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="consumer_key" xml:space="preserve">
+				<source>Consumer key</source>
+			</trans-unit>
+			<trans-unit id="consumer_secret" xml:space="preserve">
+				<source>Consumer secret</source>
+			</trans-unit>
+			<trans-unit id="consumer_requesturl" xml:space="preserve">
+				<source>Request token URL</source>
+			</trans-unit>
+			<trans-unit id="consumer_accessurl" xml:space="preserve">
+				<source>Access token URL</source>
+			</trans-unit>
+			<trans-unit id="consumer_authorizeurl" xml:space="preserve">
+				<source>Authorize URL</source>
+			</trans-unit>
+			<trans-unit id="consumer_authenticateurl" xml:space="preserve">
+				<source>Authenticate URL</source>
+			</trans-unit>
+			<trans-unit id="consumer_apiurl" xml:space="preserve">
+				<source>Api URL</source>
+			</trans-unit>
+			<trans-unit id="account_index" xml:space="preserve">
+				<source>Account Overview</source>
+			</trans-unit>
+			<trans-unit id="account_title" xml:space="preserve">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="account_key" xml:space="preserve">
+				<source>AccountID</source>
+			</trans-unit>
+			<trans-unit id="account_consumer" xml:space="preserve">
+				<source>consumer to use</source>
+			</trans-unit>
+			<trans-unit id="account_consumer_title" xml:space="preserve">
+				<source>Consumertitle</source>
+			</trans-unit>
+			<trans-unit id="edit" xml:space="preserve">
+				<source>Edit of</source>
+			</trans-unit>
+			<trans-unit id="delete" xml:space="preserve">
+				<source>Delete of</source>
+			</trans-unit>
+			<trans-unit id="cancel" xml:space="preserve">
+				<source>Cancel</source>
+			</trans-unit>
+			<trans-unit id="save" xml:space="preserve">
+				<source>Save</source>
+			</trans-unit>
+			<trans-unit id="new_account" xml:space="preserve">
+				<source>Create new account</source>
+			</trans-unit>
+			<trans-unit id="new_consumer" xml:space="preserve">
+				<source>Create new consumer</source>
+			</trans-unit>
+			<trans-unit id="authorization_needed" xml:space="preserve">
+				<source>Authorization is needed before an account can be used.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
