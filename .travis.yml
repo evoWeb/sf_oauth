@@ -66,11 +66,6 @@ script:
     echo "Running php lint";
     find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
 
-  - >
-    echo;
-    echo "Running unit tests in folder '$UNITTEST_FOLDER' with suite '$UNITTEST_SUITE'";
-    .Build/bin/phpunit --colors -c $UNITTEST_SUITE $UNITTEST_FOLDER
-
 after_script:
   - >
     if [ -n "$TRAVIS_TAG" ] && [ -n "$TYPO3_ORG_USERNAME" ] && [ -n "$TYPO3_ORG_PASSWORD" ]; then
