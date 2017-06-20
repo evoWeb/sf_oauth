@@ -13,7 +13,8 @@
 	],
 
 	"require": {
-		"typo3/cms-core": "*"
+		"typo3/cms-core": ">=8.0.0",
+		"thephpleague/oauth2-client": "^2.2.1"
 	},
 
 	"autoload": {

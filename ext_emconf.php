@@ -14,7 +14,7 @@ $EM_CONF['sf_oauth'] = [
     'version' => '1.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '7.6.0-8.7.99',
+            'typo3' => '8.0.0-8.7.99',
         ],
         'conflicts' => [],
         'suggests' => [],
