@@ -1,6 +1,6 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
 
-<f:form.errors for="{for}">
+<f:form.validationResults for="{for}">
 	<div class="error">
 		{error.message}
 		<f:if condition="{error.propertyName}">
@@ -12,6 +12,6 @@
 			</p>
 		</f:if>
 	</div>
-</f:form.errors>
+</f:form.validationResults>
 
 </html>

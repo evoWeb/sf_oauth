@@ -56,6 +56,7 @@ class IconViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendView
             false,
             ''
         );
+        $this->registerArgument('class', 'string', '', false, '');
     }
 
     /**
@@ -88,6 +89,7 @@ class IconViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendView
         $uri = $arguments['uri'];
         $title = $arguments['title'];
         $iconKey = $arguments['iconKey'];
+        $class = $arguments['class'];
 
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
         $allowedIcons = $iconRegistry->getAllRegisteredIconIdentifiers();
@@ -103,6 +105,6 @@ class IconViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendView
             $icon = $iconFactory->getIcon($iconKey, \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL);
         }
 
-        return '<a href="' . $uri . '" title="' . $title . '">' . $icon . '</a>';
+        return '<a href="' . $uri . '" title="' . $title . '" class="' . $class . '">' . $icon . '</a>';
     }
 }

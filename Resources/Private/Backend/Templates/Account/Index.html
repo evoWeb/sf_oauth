@@ -2,70 +2,95 @@
 		xmlns:sfoa="http://typo3.org/ns/Evoweb/SfOauth/ViewHelpers"
 		data-namespace-typo3-fluid="true">
 
-<f:layout name="Default" />
+<f:layout name="Default"/>
 
 <f:section name="iconButtons"/>
 
 <f:section name="content">
 
-<table cellspacing="0" cellpadding="0" border="0" class="typo3-dblist">
+<div class="panel panel-space panel-default recordlist">
+	<div class="panel-heading">
+		&nbsp;
+	</div>
 
-	<!-- Element, begin: -->
-	<thead>
-		<tr class="c-table-row-spacer">
-			<td nowrap="nowrap" class="col-icon"><img width="1" height="8" alt="" src="clear.gif"></td>
-			<td nowrap="nowrap" class=""><img width="100" height="1" alt="" src="clear.gif"></td>
-			<td nowrap="nowrap" colspan="2" class=""></td>
-			<td nowrap="nowrap" colspan="3" class=""></td>
-		</tr>
-		<!-- Element, begin: -->
-		<tr class="t3-row-header">
-			<td nowrap="nowrap" class="col-icon">&nbsp;</td>
-			<td nowrap="nowrap" colspan="6" class=""></td>
-		</tr>
-		<!-- Element, begin: -->
-		<tr class="c-headLine">
-			<td nowrap="nowrap" class="col-icon"><f:format.raw><sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}" iconKey="actions-document-new" title="{f:translate(key: 'new_account')}" /></f:format.raw></td>
-			<td nowrap="nowrap" class="col-title"><a><f:translate key="account_title"/>:</a></td>
-			<td nowrap="nowrap" class="col-clipboard">&nbsp;</td>
-			<td nowrap="nowrap" class="col-control-space">&nbsp;</td>
-			<td nowrap="nowrap" class=""><f:translate key="account_consumer_title"/>:</td>
-			<td nowrap="nowrap" class=""><f:translate key="account_key"/>:</td>
-			<td nowrap="nowrap" class=""></td>
-		</tr>
-	</thead>
-	<tbody>
-<f:for each="{accounts}" as="account">
-		<!-- Element, begin: -->
-		<tr class="db_list_normal firstcol lastcol">
-			<td nowrap="nowrap" class="col-icon"></td>
-			<td nowrap="nowrap" class="col-title">{account.title}</td>
-			<td nowrap="nowrap" class="col-clipboard">
-				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'edit', arguments: {account: account.uid})}" iconKey="edit2" title="{f:translate(key: 'edit')} '{account.title}'" />
-				<f:link.action action="delete" arguments="{account: account.uid}"><img src="sysext/t3skin/icons/gfx/garbage.gif" alt="" title="{f:translate(key: 'delete')} '{account.title}'"/></f:link.action>
-			<f:if condition="{account.hasWarning}">
-				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'authorize', arguments: {account: account.uid})}" iconKey="warning" />
-			</f:if>
-			<f:if condition="{account.hasError}">
-				<sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}" iconKey="error" />
-			</f:if>
-			<f:if condition="{account.isOk}">
-				<sfoa:be.buttons.icon uri="" iconKey="ok" />
-			</f:if>
-			</td>
-			<td nowrap="nowrap" class="col-control-space">&nbsp;</td>
-			<td nowrap="nowrap" class="">{account.consumer.title}</td>
-			<td nowrap="nowrap" class="">
-				<f:if condition="{account.isOk}">
-					<f:then>{account.uid}</f:then>
-					<f:else><f:translate key="authorization_needed"/></f:else>
-				</f:if>
-			</td>
-			<td nowrap="nowrap" class="">&nbsp;</td>
-		</tr>
-</f:for>
-	</tbody>
-</table>
+	<div class="collapse in" id="recordlist-accounts" aria-expanded="true">
+		<div class="table-fit">
+			<table data-table="pages" class="table table-striped table-hover">
+				<thead>
+				<!-- Element, begin: -->
+				<tr data-uid="0" data-l10nparent="0">
+					<th nowrap="nowrap" class="col-icon">
+						<f:format.raw>
+							<sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}"
+									iconKey="actions-document-new"
+									title="{f:translate(key: 'new_account')}"/>
+						</f:format.raw>
+					</th>
+
+					<th nowrap="nowrap" class="col-title col-responsive">
+						<f:translate key="account_title"/>
+					</th>
+					<th nowrap="nowrap" class="col-control">&nbsp;</th>
+					<th nowrap="nowrap" class="col-clipboard">
+						<div class="btn-group" role="group"></div>
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				<f:for each="{accounts}" as="account" iteration="iteration">
+					<!-- Element, begin: -->
+					<tr class="{f:if(condition: iteration.first, then: 'firstcol', else: '{f:if(condition: iteration.last, then: \'lastcol\', else: \'\')}')}"
+							data-uid="{account.uid}">
+						<td nowrap="nowrap" class="col-icon">
+							<a href="#" data-table="account" data-uid="{account.uid}">
+								<span data-toggle="tooltip" data-title=" id={account.uid}" data-html="true" data-placement="right">
+									<span
+										class="t3js-icon icon icon-size-small icon-state-default icon-apps-pagetree-folder-contains-commerce"
+										data-identifier="apps-pagetree-folder-contains-commerce">
+										<span class="icon-markup">
+											<img src="/typo3conf/ext/commerce/Resources/Public/Icons/Table/folder.gif" width="16" height="16">
+										</span>
+									</span>
+								</span>
+							</a>
+						</td>
+
+						<td nowrap="nowrap" class="col-title col-responsive">{account.title} [{account.consumer.title}]</td>
+
+						<td nowrap="nowrap" class="col-control"><!-- CONTROL PANEL: pages:1 -->
+							<div class="btn-group" role="group">
+								<sfoa:be.buttons.icon uri="{f:uri.action(action: 'edit', arguments: {account: account.uid})}"
+										iconKey="edit2" title="{f:translate(key: 'edit')} '{account.title}'"/>
+								<f:link.action action="delete" arguments="{account: account.uid}"><img
+										src="sysext/t3skin/icons/gfx/garbage.gif" alt=""
+										title="{f:translate(key: 'delete')} '{account.title}'"/></f:link.action>
+							</div>
+						</td>
+						<td nowrap="nowrap" class="col-clipboard"><!-- CLIPBOARD PANEL: pages:1 -->
+							<div class="btn-group" role="group">
+								<f:if condition="{account.isOk}">
+									<f:then><sfoa:be.buttons.icon uri="" iconKey="ok"/> [{account.uid}]</f:then>
+									<f:else>
+										<f:translate key="authorization_needed"/>
+									</f:else>
+								</f:if>
+								<f:if condition="{account.hasWarning}">
+									<sfoa:be.buttons.icon
+											uri="{f:uri.action(action: 'authorize', arguments: {account: account.uid})}"
+											iconKey="warning"/>
+								</f:if>
+								<f:if condition="{account.hasError}">
+									<sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}" iconKey="error"/>
+								</f:if>
+							</div>
+						</td>
+					</tr>
+				</f:for>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
 
 </f:section>
 
