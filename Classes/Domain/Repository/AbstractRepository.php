@@ -99,37 +99,43 @@ class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
      */
     public function findAll()
     {
-        $storedEntries = $this->getDatabaseConnection()->exec_SELECTgetRows(
-            'entry_key',
-            'sys_registry',
-            'entry_namespace = ' . $this->getDatabaseConnection()->fullQuoteStr($this->namespace, 'sys_registry'),
-            '',
-            'entry_key DESC'
-        );
+        $queryBuilder = $this->getQueryBuilderForTable('sys_registry');
+        $result = $queryBuilder
+            ->select('entry_key')
+            ->from('sys_registry')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'entry_namespace',
+                    $queryBuilder->createNamedParameter($this->namespace, \PDO::PARAM_STR)
+                )
+            )
+            ->orderBy('entry_key', 'DESC')
+            ->execute();
 
-        $result = [];
-        foreach ($storedEntries as $storedEntry) {
-            $result[] = $this->findByUid($storedEntry['entry_key']);
+        $records = [];
+        while ($storedEntry = $result->fetch()) {
+            $records[] = $this->findByUid($storedEntry['entry_key']);
         }
 
-        return $result;
+        return $records;
     }
 
     /**
      * Finds an object matching the given identifier.
      *
-     * @param integer $key key that identify the data in t3_registry
+     * @param int $uid key that identify the data in t3_registry
      *
      * @return object The matching object if found, otherwise NULL
      */
-    public function findByUid($key)
+    public function findByUid($uid)
     {
-        $values = $this->registry->get($this->namespace, $key);
+        $entry = $this->registry->get($this->namespace, $uid);
 
         $object = null;
-        if (is_array($values) && count($values)) {
-            $object = GeneralUtility::makeInstance($this->objectType, $key);
-            $this->propertyMapper->map(array_keys($values), $values, $object);
+        if (is_array($entry) && count($entry)) {
+            /** @var \TYPO3\CMS\Extbase\DomainObject\AbstractEntity $object */
+            $object = $this->propertyMapper->convert($entry, $this->objectType);
+            $object->_setProperty('uid', $uid);
         }
 
         return $object;
@@ -193,5 +199,17 @@ class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Repository
     protected function getDatabaseConnection()
     {
         return $GLOBALS['TYPO3_DB'];
+    }
+
+    /**
+     * @param string $table
+     *
+     * @return \TYPO3\CMS\Core\Database\Query\QueryBuilder
+     */
+    protected function getQueryBuilderForTable($table): \TYPO3\CMS\Core\Database\Query\QueryBuilder
+    {
+        return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Database\ConnectionPool::class
+        )->getQueryBuilderForTable($table);
     }
 }

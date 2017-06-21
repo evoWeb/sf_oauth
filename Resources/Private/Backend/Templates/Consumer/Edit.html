@@ -5,8 +5,18 @@
 <f:layout name="default" />
 
 <f:section name="iconButtons">
-	<sfoa:be.buttons.icon uri="{f:uri.action(action: 'index')}" iconKey="closedok" title="{f:translate(key: 'cancel')}" />
-	<sfoa:be.buttons.icon uri="javascript: document.consumer.submit();" iconKey="saveandclosedok" title="{f:translate(key: 'save')}" />
+	<f:format.raw>
+		<sfoa:be.buttons.icon
+				uri="{f:uri.action(action: 'index')}"
+				iconKey="actions-close"
+				title="{f:translate(key: 'cancel')}"
+				class="btn btn-sm btn-default"/>
+		<sfoa:be.buttons.icon
+				uri="javascript: document.consumer.submit();"
+				iconKey="actions-document-save-close"
+				title="{f:translate(key: 'save')}"
+				class="btn btn-sm btn-default"/>
+	</f:format.raw>
 </f:section>
 
 <f:section name="content">

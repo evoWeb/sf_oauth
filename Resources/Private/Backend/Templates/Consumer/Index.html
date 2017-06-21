@@ -59,29 +59,20 @@
 
 						<td nowrap="nowrap" class="col-control"><!-- CONTROL PANEL: pages:1 -->
 							<div class="btn-group" role="group">
-								<sfoa:be.buttons.icon uri="{f:uri.action(action: 'edit', arguments:{consumer: consumer.uid})}"
-										iconKey="actions-document-edit" title="{f:translate(key: 'edit')} '{consumer.title}'" />
-								<f:link.action action="delete" arguments="{consumer: consumer.uid}"><img
-										src="sysext/t3skin/icons/gfx/garbage.gif" alt=""
-										title="{f:translate(key: 'delete')} '{consumer.title}'"/></f:link.action>
+								<f:format.raw>
+									<sfoa:be.buttons.icon
+										uri="{f:uri.action(action: 'edit', arguments:{consumer: consumer.uid})}"
+										iconKey="actions-open" title="{f:translate(key: 'edit')} '{consumer.title}'"
+										class="btn btn-default"/>
+									<sfoa:be.buttons.icon
+										uri="{f:uri.action(action: 'delete', arguments:{consumer: consumer.uid})}"
+										iconKey="actions-delete" title="{f:translate(key: 'delete')} '{consumer.title}'"
+										class="btn btn-default"/>
+								</f:format.raw>
 							</div>
 						</td>
 						<td nowrap="nowrap" class="col-clipboard"><!-- CLIPBOARD PANEL: pages:1 -->
 							<div class="btn-group" role="group">
-								<f:if condition="{account.isOk}">
-									<f:then><sfoa:be.buttons.icon uri="" iconKey="ok"/> [{account.uid}]</f:then>
-									<f:else>
-										<f:translate key="authorization_needed"/>
-									</f:else>
-								</f:if>
-								<f:if condition="{account.hasWarning}">
-									<sfoa:be.buttons.icon
-											uri="{f:uri.action(action: 'authorize', arguments: {account: account.uid})}"
-											iconKey="warning"/>
-								</f:if>
-								<f:if condition="{account.hasError}">
-									<sfoa:be.buttons.icon uri="{f:uri.action(action: 'new')}" iconKey="error"/>
-								</f:if>
 							</div>
 						</td>
 					</tr>

@@ -129,13 +129,16 @@ class ConsumerController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControl
     /**
      * Edits an existing consumer
      *
-     * @param \Evoweb\SfOauth\Domain\Model\Consumer $consumer
-     *
      * @return void Form for editing the existing consumer
      */
-    public function editAction(\Evoweb\SfOauth\Domain\Model\Consumer $consumer)
+    public function editAction()
     {
-        $this->view->assign('consumer', $consumer);
+        if ($this->request->hasArgument('consumer')) {
+            $consumer = $this->consumerRepository->findByUid((int)$this->request->getArgument('consumer'));
+            $this->view->assign('consumer', $consumer);
+        } else {
+            $this->forward('index');
+        }
     }
 
     /**
