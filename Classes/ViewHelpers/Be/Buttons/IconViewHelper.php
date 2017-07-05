@@ -56,7 +56,15 @@ class IconViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendView
             false,
             ''
         );
-        $this->registerArgument('class', 'string', '', false, '');
+        $this->registerArgument(
+            'onclick',
+            'string',
+            'Javascript action taken if clicked',
+            false,
+            ''
+        );
+        $this->registerArgument('id', 'string', '');
+        $this->registerArgument('class', 'string', '');
     }
 
     /**
@@ -89,6 +97,8 @@ class IconViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendView
         $uri = $arguments['uri'];
         $title = $arguments['title'];
         $iconKey = $arguments['iconKey'];
+        $onclick = $arguments['onclick'];
+        $id = $arguments['id'];
         $class = $arguments['class'];
 
         $iconRegistry = GeneralUtility::makeInstance(IconRegistry::class);
@@ -105,6 +115,14 @@ class IconViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendView
             $icon = $iconFactory->getIcon($iconKey, \TYPO3\CMS\Core\Imaging\Icon::SIZE_SMALL);
         }
 
-        return '<a href="' . $uri . '" title="' . $title . '" class="' . $class . '">' . $icon . '</a>';
+        if (empty($uri) && empty($onclick)) {
+            return $icon;
+        } else {
+            $onclick = ' onclick="' . $onclick . '"';
+            return '<a href="' . $uri . '"
+                title="' . $title . '"
+                class="' . $class . '"
+                id="' . $id . '" ' . $onclick . '>' . $icon . '</a>';
+        }
     }
 }
