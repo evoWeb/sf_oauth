@@ -2,7 +2,7 @@
 
 $EM_CONF['sf_oauth'] = [
     'title' => 'OAuth Service',
-    'description' => 'Offers a service that can be instantiated in frontend
+    'description' => 'Offers a service that can be instantiated in frontend 
     plugins and backend modules to authenticate against twitter to post
     updates or get information and tweets.',
     'category' => 'Sebastian Fischer',
